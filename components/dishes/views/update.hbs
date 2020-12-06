@@ -1,0 +1,240 @@
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Update Pizza</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Manage Pizza</a></li>
+                            <li class="breadcrumb-item active">Update Pizza</li>
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+                            <h4 class="mt-0 header-title">Sửa thông thông tin của sản phẩm cần cập nhật</h4>
+
+                            <input type="hidden" id="id" name="id" value="{{_id}}"/>
+                            <!-- Form -->
+                            <form method="POST" action="/manage-pizza/update/{{_id}}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label>Tên</label>
+                                    <input type="text" class="form-control" required placeholder="Tên sản phẩm" value="{{name}}" id="name" name="name"/>
+                                </div>
+
+                                <div class="form-group col-sm-2 img-picker-container">
+                                    <label>Ảnh đại diện</label>
+                                    <div class="img-picker" id="avatarPicker" data-url="{{avatar}}"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Mô tả</label>
+                                    <div>
+                                        <textarea required class="form-control" rows="5" required placeholder="Mô tả sản phẩm"  id="description" name="description">{{description}}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group img-picker-container">
+                                    <label>Ảnh mô tả</label>
+
+                                    {{#if (hasImage)}}
+                                        <div class="row">
+                                            {{#each images}}
+                                                <div class="img-picker col-sm-2" id="descriptionPicker{{index @index}}" data-url="{{src}}"></div>
+                                            {{/each}}
+                                        </div>
+                                    {{else}}
+                                        <div class="row">
+                                            <div class="img-picker col-sm-2" id="descriptionPicker1" data-url=""></div>
+                                            <div class="img-picker col-sm-2" id="descriptionPicker2" data-url=""></div>
+                                            <div class="img-picker col-sm-2" id="descriptionPicker3" data-url=""></div>
+                                            <div class="img-picker col-sm-2" id="descriptionPicker4" data-url=""></div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Giá tiền</label>
+                                    <div class="input-group">
+                                        <input data-parsley-type="number" type="text"
+                                               class="form-control" required
+                                               placeholder="Giá tiền sản phẩm"
+                                               value={{price}}
+                                               id="price"
+                                               name="price"/>
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">VNĐ</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Loại</label>
+                                    <div >
+                                        <select class="form-control" name="kind" id="kind">
+                                            {{#if (isTraditional)}}
+                                                <option selected>Truyền thống</option>
+                                            {{else}}
+                                                <option>Truyền thống</option>
+                                            {{/if}}
+
+                                            {{#if (isSea)}}
+                                                <option selected>Hải sản</option>
+                                            {{else}}
+                                                <option>Hải sản</option>
+                                            {{/if}}
+
+                                            {{#if (isMixed)}}
+                                                <option selected>Thập cẩm</option>
+                                            {{else}}
+                                                <option>Thập cẩm</option>
+                                            {{/if}}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Kích thước</label>
+                                    <div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (size1)}}
+                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="size1"><p>25cm <span>(250g)</span></p>  </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (size2)}}
+                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="size2"><p>30cm <span>(450g)</span></p>  </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (size3)}}
+                                                <input type="checkbox" class="custom-control-input" id="size3" name="size3" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="size3" name="size3" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="size3"><p>40cm <span>(550g)</span></p>  </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Đế bánh</label>
+                                    <div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (dough1)}}
+                                                <input type="checkbox" class="custom-control-input" id="dough1" name="dough1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="dough1" name="dough1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="dough1">Mỏng</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (dough2)}}
+                                                <input type="checkbox" class="custom-control-input" id="dough2" name="dough2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="dough2" name="dough2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="dough2">Dày</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Toping đi kèm</label>
+                                    <div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (toping1)}}
+                                                <input type="checkbox" class="custom-control-input" id="toping1" name="toping1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="toping1" name="toping1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="toping1">Ớt chuông</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (toping2)}}
+                                                <input type="checkbox" class="custom-control-input" id="toping2" name="toping2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="toping2" name="toping2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="toping2">Thị xông khói</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (toping3)}}
+                                                <input type="checkbox" class="custom-control-input" id="toping3" name="toping3" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="toping3" name="toping3" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="toping3">Nấm</label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            {{#if (toping4)}}
+                                                <input type="checkbox" class="custom-control-input" id="toping4" name="toping4" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1" checked>
+                                            {{else}}
+                                                <input type="checkbox" class="custom-control-input" id="toping4" name="toping4" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                            {{/if}}
+                                            <label class="custom-control-label" for="toping4">Cải xà lách</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                            Update
+                                        </button>
+                                        <a href="/manage-pizza">
+                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                                Bỏ qua
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- content -->
+
+    <footer class="footer">
+        © 2019 Stexo <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
+    </footer>
+</div>

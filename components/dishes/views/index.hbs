@@ -39,7 +39,7 @@
                                 <div class="col-lg-7">
                                     <!-- filter here -->
                                     <div class="row">
-                                        <p class="col-sm-3 found-search-item col-form-label ">Found 20 items</p>
+                                        <p class="col-sm-3 found-search-item col-form-label ">Found <strong>20</strong> items</p>
 
                                         <p class="found-search-item col-form-label">Categories</p>
                                         <div class="col-sm-3">
@@ -89,16 +89,17 @@
                                     <tbody>
                                     {{#each dish}}
                                         <tr>
-                                            <th scope="row">{{index @index}}</th>
+                                            <th scope="row">{{id}}</th>
                                             <td>{{name}}</td>
                                             <td>{{category}}</td>
                                             <td>{{subcategory}}</td>
                                             <td>{{price}}</td>
-                                            <td><span class="badge badge-info">{{Status}}</span></td>
+                                            <!-- binding bage info -->
+                                            <td><span class="badge badge-info">{{status}}</span></td>
                                             <td>
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
-                                                        <a href="/manage-dishes/update/{{_id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
+                                                        <a href="/manage-dishes/update/{{id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
                                                         <button type="button" class="btn btn-danger waves-effect waves-light m-r-5" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{_id}}')">
                                                             <i class="far fa-trash-alt"></i>
                                                         </button>
