@@ -42,7 +42,7 @@
                                         <p class="col-sm-3 found-search-item col-form-label ">Found <strong>20</strong> items</p>
 
                                         <p class="found-search-item col-form-label">Categories</p>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-auto">
                                             <select class="form-control">
                                                 <option>Pizza</option>
                                                 <option>Thức uống</option>
@@ -51,12 +51,21 @@
                                         </div>
 
                                         <p class="found-search-item col-form-label">Sort by</p>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-auto">
                                             <select class="form-control">
                                                 <option>Date</option>
                                                 <option>Name</option>
                                                 <option>High price</option>
                                                 <option>Low price</option>
+                                            </select>
+                                        </div>
+
+                                        <p class="found-search-item col-form-label">Shown items</p>
+                                        <div class="col-sm-auto">
+                                            <select class="form-control">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
                                             </select>
                                         </div>
 
@@ -100,7 +109,7 @@
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
                                                         <a href="/manage-dishes/update/{{id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
-                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{_id}}')">
+                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{id}}')">
                                                             <i class="far fa-trash-alt"></i>
                                                         </button>
                                                     </div>
