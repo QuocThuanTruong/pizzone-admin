@@ -27,8 +27,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', adminRouter);
-app.use('/', adminRouter);
-app.use('/')
+app.use('/dashboard', adminRouter);
+app.use('/manage-dishes', dishesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
