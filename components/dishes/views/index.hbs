@@ -26,9 +26,9 @@
                         <div class="card-body">
                             <div class="row p-3">
                                 <div class="col-lg-3">
-                                    <form role="search" class="email-inbox ">
+                                    <form role="search" class="email-inbox" method="GET" action="/manage-dishes">
                                         <div class="form-group mb-0">
-                                            <input type="text" class="form-control rounded" placeholder="Search your dishes..">
+                                            <input type="text" class="form-control rounded" placeholder="Search your dishes.." name="key_name">
                                             <button type="submit"><i class="fa fa-search"></i></button>
                                         </div>
                                     </form>
@@ -43,9 +43,21 @@
                                         <p class="found-search-item col-form-label">Categories</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="category_option" onchange="changeCategory()">
-                                                <option>Pizza</option>
-                                                <option>Thức uống</option>
-                                                <option>Đồ ăn kèm</option>
+                                                {{#if isPizzaSelected}}
+                                                    <option selected>Pizza</option>
+                                                {{else}}
+                                                    <option>Pizza</option>
+                                                {{/if}}
+                                                {{#if isDrinkSelected}}
+                                                    <option selected>Drink</option>
+                                                {{else}}
+                                                    <option>Drink</option>
+                                                {{/if}}
+                                                {{#if isSideSelected}}
+                                                    <option selected>Side</option>
+                                                {{else}}
+                                                    <option>Side</option>
+                                                {{/if}}
                                             </select>
                                         </div>
 

@@ -1,3 +1,5 @@
+const dishModel = require('./model')
+
 function helper(hbs) {
     hbs.registerHelper('render_pagination', function (category, page, totalPage) {
         let currentPage = parseInt(page)
@@ -36,6 +38,7 @@ function helper(hbs) {
 
         return html
     });
+
 }
 
 module.exports = helper;

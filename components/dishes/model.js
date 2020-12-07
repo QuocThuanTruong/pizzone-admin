@@ -61,6 +61,18 @@ exports.getListImageById = async (id) => {
     return await execQuery('SELECT * FROM dishes_images where dish = ' +id)
 }
 
+exports.getCategoryName = async (categoryId) => {
+    const category = await execQuery('SELECT * FROM dishes_category WHERE category_id = ' +categoryId)
+
+    return category[0].name
+}
+
+exports.getSubCategoryName = async (subCategoryId) => {
+    const subCategory = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' +subCategoryId)
+
+    return subCategory[0].name
+}
+
 exports.getSubCategory = async (id) => {
     const subCategory = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' +id)
 
