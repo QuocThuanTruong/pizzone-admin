@@ -6,7 +6,8 @@ var logger = require('morgan');
 var hbs = require('hbs');
 
 require("dotenv").config();
-require('./components/admin/helpers')(hbs);
+require('./components/admin/helper')(hbs);
+require('./components/dishes/helper')(hbs);
 
 const adminRouter = require('./components/admin/router');
 const dishesRouter = require('./components/dishes/router');
@@ -43,7 +44,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('errors/error');
 });
 
 module.exports = app;

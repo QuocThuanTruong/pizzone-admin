@@ -6,6 +6,7 @@ const dishesController = require('./controller');
 router.get('/', dishesController.index);
 
 router.get('/update/:id', dishesController.update)
+/*router.post('/update/:id', dishesController.updateInfo)*/
 router.get('/add', dishesController.add)
 
 module.exports = router;

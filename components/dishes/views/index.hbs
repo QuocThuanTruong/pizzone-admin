@@ -24,7 +24,6 @@
                 <div class="col-lg-12">
                     <div class="card m-b-30">
                         <div class="card-body">
-
                             <div class="row p-3">
                                 <div class="col-lg-3">
                                     <form role="search" class="email-inbox ">
@@ -39,11 +38,11 @@
                                 <div class="col-lg-7">
                                     <!-- filter here -->
                                     <div class="row">
-                                        <p class="col-sm-3 found-search-item col-form-label ">Found <strong>20</strong> items</p>
+                                        <p class="col-sm-3 found-search-item col-form-label ">Found <strong>{{totalResult}}</strong> items</p>
 
                                         <p class="found-search-item col-form-label">Categories</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control">
+                                            <select class="form-control" id="category_option" onchange="changeCategory()">
                                                 <option>Pizza</option>
                                                 <option>Thức uống</option>
                                                 <option>Đồ ăn kèm</option>
@@ -62,10 +61,10 @@
 
                                         <p class="found-search-item col-form-label">Shown items</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control">
-                                                <option>10</option>
-                                                <option>20</option>
-                                                <option>30</option>
+                                            <select class="form-control" id="total_dish_per_page">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
                                             </select>
                                         </div>
 
@@ -96,15 +95,15 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {{#each dish}}
+                                    {{#each dishes}}
                                         <tr>
-                                            <th scope="row">{{id}}</th>
+                                            <th scope="row">{{dish_id}}</th>
                                             <td>{{name}}</td>
-                                            <td>{{category}}</td>
-                                            <td>{{subcategory}}</td>
+                                            <td>{{categoryName}}</td>
+                                            <td>{{subCategoryName}}</td>
                                             <td>{{price}}</td>
                                             <!-- binding bage info -->
-                                            <td><span class="badge badge-info">{{status}}</span></td>
+                                            <td><span class="badge badge-info">{{statusName}}</span></td>
                                             <td>
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
@@ -127,7 +126,7 @@
                 </div> <!-- end col -->
             </div>
 
-           {{> dishesPagination}}
+            {{{render_pagination category page totalPage}}}
         </div>
         <!-- container-fluid -->
     </div>
@@ -165,5 +164,42 @@
         document.body.appendChild(form);
 
         form.submit()
+    }
+</script>
+
+<script>
+    function gotoPage(categoryId, page) {
+        if (categoryId === 0)
+            categoryId = ""
+
+        const totalDishPerPageArr = [1, 2, 3]
+        const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
+
+        const url='/manage-dishes?category='+categoryId+'&page='+page+'&total_dish_per_page='+totalDishPerPage;
+
+        /*$.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                console.log(data)
+                $("#pagination").html(data)
+            },
+            error: function (err) {
+                conole.log(err)
+            }
+        })*/
+
+        $.get(url, () => {
+
+        })
+
+        window.location.replace(url)
+    }
+
+    function changeCategory() {
+        const categories = [1, 2, 3]
+        const category = categories[document.getElementById('category_option').selectedIndex]
+
+        gotoPage(category, 1)
     }
 </script>
