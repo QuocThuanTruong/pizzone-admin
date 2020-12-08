@@ -26,7 +26,7 @@
                             <h4 class="mt-0 header-title">Điền đầy đủ thông tin của món ăn cần thêm</h4>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-pizza/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label>Tên</label>
                                     <input type="text" class="form-control" required placeholder="Tên sản phẩm" name="name" id="name"/>
@@ -35,19 +35,31 @@
                                 <div class="form-group">
                                     <label>Loại món ăn</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category">
-                                            <option>Pizza</option>
-                                            <option>Thức uống</option>
-                                            <option>Đồ ăn kèm</option>
+                                        <select class="form-control" id="category" name="category" onchange="changeCategory()">
+                                            {{#if isPizzaSelected}}
+                                                <option selected>Pizza</option>
+                                            {{else}}
+                                                <option>Pizza</option>
+                                            {{/if}}
+                                            {{#if isDrinkSelected}}
+                                                <option selected>Thức uống</option>
+                                            {{else}}
+                                                <option>Thức uống</option>
+                                            {{/if}}
+                                            {{#if isSideSelected}}
+                                                <option selected>Đồ ăn kèm</option>
+                                            {{else}}
+                                                <option>Đồ ăn kèm</option>
+                                            {{/if}}
                                         </select>
                                     </div>
                                 </div>
 
-                                {{#if isAddingPizza}}
+                                {{#if isPizzaSelected}}
                                 <div class="form-group">
                                     <label>Loại pizza</label>
                                     <div >
-                                        <select class="form-control" id="subategory" name="subategory">
+                                        <select class="form-control" id="subcategory" name="subcategory">
                                             <option>Truyền thống</option>
                                             <option>Hải sản</option>
                                             <option>Thập cẩm</option>
@@ -61,10 +73,10 @@
                                     <div class="img-picker" id="avatarPicker" data-url=""></div>
                                 </div>
 
-                                {{#if isAddingPizza}}
+                                {{#if isPizzaSelected}}
                                     <div class="form-group">
                                         <label>Nguyên liệu</label>
-                                        <input type="text" class="form-control" required placeholder="Tên các loại nguyên liệu" name="ingredients" id="ingredients"/>
+                                        <input type="text" class="form-control" required placeholder="Tên các loại nguyên liệu" name="igredients" id="igredients"/>
                                     </div>
                                 {{/if}}
 
@@ -99,13 +111,13 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-group">
                                     <label>Giảm giá</label>
                                     <input type="text" class="form-control" required placeholder="% giảm giá sản phẩm" name="discount" id="discount"/>
                                 </div>
 
                                 <!-- load kích thước từ db -->
+                                {{#if isPizzaSelected}}
                                 <div class="form-group">
                                     <label>Kích thước</label>
                                     <div>
@@ -126,8 +138,45 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{/if}}
 
-                                {{#if isAddingPizza}}
+                                {{#if isDrinkSelected}}
+                                    <div class="form-group">
+                                        <label>Kích thước</label>
+                                        <div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                                <label class="custom-control-label" for="size1"><p>L</p>  </label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                                <label class="custom-control-label" for="size2"><p>M</p>  </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+
+                                {{#if isSideSelected}}
+                                    <div class="form-group">
+                                        <label>Kích thước</label>
+                                        <div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                                <label class="custom-control-label" for="size1"><p>1 Người Ăn</p>  </label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
+                                                       data-parsley-mincheck="1">
+                                                <label class="custom-control-label" for="size2"><p>2 Người Ăn</p>  </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+
+                                {{#if isPizzaSelected}}
                                 <div class="form-group">
                                     <label>Đế bánh</label>
                                     <div>
@@ -178,7 +227,7 @@
                                             Thêm
                                         </button>
 
-                                        <a href="/manage-pizza">
+                                        <a href="/manage-dishes">
                                             <button type="reset" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
@@ -199,3 +248,37 @@
         © 2020 Pizzone <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
     </footer>
 </div>
+
+<script>
+    function changeCategory() {
+        const categories = [1, 2, 3]
+        const category = categories[document.getElementById('category').selectedIndex]
+
+        reloadPage(category)
+    }
+
+    function reloadPage(category) {
+        if (category === 0)
+            category = ""
+
+        const url='/manage-dishes/add?category='+category;
+
+        /*$.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                console.log(data)
+                $("#pagination").html(data)
+            },
+            error: function (err) {
+                conole.log(err)
+            }
+        })*/
+
+        $.get(url, () => {
+
+        })
+
+        window.location.replace(url)
+    }
+</script>

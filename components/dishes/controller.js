@@ -1,5 +1,18 @@
 const dishModel = require('./model')
 
+const formidable = require('formidable');
+const fs = require('fs')
+const path = require('path');
+const rimraf = require('rimraf')
+
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
+
 exports.index = async (req, res, next) => {
     const key_name = req.query.key_name;
 
@@ -7,16 +20,16 @@ exports.index = async (req, res, next) => {
     let currentPage = req.query.page;
     let totalDishPerPage = req.query.total_dish_per_page;
 
-    console.log(req.query)
+    /*console.log(req.query)*/
 
     if (categoryId === undefined || categoryId === "")
-        categoryId = 1;
+        categoryId = '1';
 
     if (currentPage === undefined)
-        currentPage = 1;
+        currentPage = '1';
 
     if (totalDishPerPage === undefined)
-        totalDishPerPage = 1;
+        totalDishPerPage = '1';
 
     let totalPage;
     let dishes;
@@ -26,7 +39,7 @@ exports.index = async (req, res, next) => {
     let isDrinkSelected = false;
     let isSideSelected = false;
 
-    console.log("Key name: ", key_name)
+    /*console.log("Key name: ", key_name)*/
 
     if (key_name !== undefined) {
         dishes = await dishModel.searchByKeyName(key_name)
@@ -54,6 +67,23 @@ exports.index = async (req, res, next) => {
         totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
     }
 
+    let totalDishPerPageOption1Selected = false;
+    let totalDishPerPageOption2Selected = false;
+    let totalDishPerPageOption3Selected = false;
+
+    switch (totalDishPerPage) {
+        case '1':
+            totalDishPerPageOption1Selected = true;
+            break;
+        case '2':
+            totalDishPerPageOption2Selected = true;
+            break;
+        case '3':
+            totalDishPerPageOption3Selected = true;
+            break;
+
+    }
+
     for (let dish of dishes) {
         dish.categoryName = await dishModel.getCategoryName(dish.category)
         dish.subCategoryName = await dishModel.getSubCategoryName(dish.subcategory)
@@ -66,6 +96,9 @@ exports.index = async (req, res, next) => {
         isPizzaSelected: isPizzaSelected,
         isDrinkSelected: isDrinkSelected,
         isSideSelected: isSideSelected,
+        totalDishPerPageOption1Selected: totalDishPerPageOption1Selected,
+        totalDishPerPageOption2Selected: totalDishPerPageOption2Selected,
+        totalDishPerPageOption3Selected: totalDishPerPageOption3Selected,
         totalResult: totalResult,
         dishes: dishes,
         totalPage: totalPage,
@@ -73,9 +106,17 @@ exports.index = async (req, res, next) => {
         category: categoryId
     }
 
-    console.log(dataContext)
+    /*console.log(dataContext)*/
 
     res.render('.././components/dishes/views/index', dataContext);
+}
+
+exports.delete = async (req, res, next) => {
+    console.log(req.body['id'])
+
+    const _ = await dishModel.delete(req.body['id'])
+
+    this.index(req, res, next)
 }
 
 exports.update = (req, res, next) => {
@@ -83,5 +124,130 @@ exports.update = (req, res, next) => {
 }
 
 exports.add = (req, res, next) => {
-    res.render('.././components/dishes/views/add', {isAddingPizza: true});
+    let categoryId = req.query.category
+
+    if (categoryId === undefined || categoryId === "")
+        categoryId = '1';
+
+    let isPizzaSelected = false;
+    let isDrinkSelected = false;
+    let isSideSelected = false;
+
+   /* console.log(categoryId)*/
+
+    switch (categoryId) {
+        case '1':
+            isPizzaSelected = true;
+            break;
+
+        case '2':
+            isDrinkSelected = true;
+            break;
+
+        case '3':
+            isSideSelected = true;
+            break;
+    }
+
+    const dataContext = {
+        isPizzaSelected: isPizzaSelected,
+        isDrinkSelected: isDrinkSelected,
+        isSideSelected: isSideSelected
+    }
+
+    res.render('.././components/dishes/views/add', dataContext);
+}
+
+exports.addInfo = async (req, res, next) => {
+    fs.mkdirSync(path.join(__dirname, '..', 'tempImages'), { recursive: true })
+    const form = formidable({multiples: true, keepExtensions: true, uploadDir : path.join(__dirname, '..', 'tempImages')})
+
+    await form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return
+        }
+
+        let dish = dishModel.modify(fields)
+        dish.images = []
+        /*console.log(dish)*/
+
+        const avatarPicker = files.avatarPicker
+        if (avatarPicker.name) {
+            await cloudinary.uploader.upload(avatarPicker.path,
+                {
+                    folder: 'WebFinalProject/Images/pizza/'+dish.dish_id,
+                    public_id: 'avatar',
+                    overwrite: true
+                }, (err, res) => {
+                    dish.avatar = res.secure_url
+                })
+        }
+
+        const descriptionPicker1 = files.descriptionPicker1
+        if (descriptionPicker1.name) {
+            //upload description
+            await cloudinary.uploader.upload(descriptionPicker1.path,
+                {
+                    folder: 'WebFinalProject/Images/pizza/'+dish.dish_id,
+                    public_id: 'description-1',
+                    overwrite: true
+                }, (err, res) => {
+                    dish.images.push({src: res.secure_url})
+                })
+        } else {
+            dish.images.push({src: ""})
+        }
+
+        const descriptionPicker2 = files.descriptionPicker2
+        if (descriptionPicker2.name) {
+            //upload description
+            await cloudinary.uploader.upload(descriptionPicker2.path,
+                {
+                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    public_id: 'description-2',
+                    overwrite: true
+                }, (err, res) => {
+                    dish.images.push({src: res.secure_url})
+                })
+        } else {
+            dish.images.push({src: ""})
+        }
+
+        const descriptionPicker3 = files.descriptionPicker3
+        if (descriptionPicker3.name) {
+            //upload description
+            await cloudinary.uploader.upload(descriptionPicker3.path,
+                {
+                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    public_id: 'description-3',
+                    overwrite: true
+                }, (err, res) => {
+                    dish.images.push({src: res.secure_url})
+                })
+        } else {
+            dish.images.push({src: ""})
+        }
+
+        const descriptionPicker4 = files.descriptionPicker4
+        if (descriptionPicker4.name) {
+            //upload description
+            await cloudinary.uploader.upload(descriptionPicker4.path,
+                {
+                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    public_id: 'description-4',
+                    overwrite: true
+                }, (err, res) => {
+                    dish.images.push({src: res.secure_url})
+                })
+        } else {
+            dish.images.push({src: ""})
+        }
+
+        /*console.log(dish)*/
+        const _ = await dishModel.insert(dish)
+
+        rimraf.sync(path.join(__dirname, '..', 'tempImages'))
+
+        this.add(req, res, next)
+    })
 }

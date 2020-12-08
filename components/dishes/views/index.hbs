@@ -42,7 +42,7 @@
 
                                         <p class="found-search-item col-form-label">Categories</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="category_option" onchange="changeCategory()">
+                                            <select class="form-control" id="category" onchange="changeCategory()">
                                                 {{#if isPizzaSelected}}
                                                     <option selected>Pizza</option>
                                                 {{else}}
@@ -73,10 +73,22 @@
 
                                         <p class="found-search-item col-form-label">Shown items</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="total_dish_per_page">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
+                                            <select class="form-control" id="total_dish_per_page" onchange="gotoPage({{category}}, 1)">
+                                                {{#if totalDishPerPageOption1Selected}}
+                                                    <option selected>1</option>
+                                                {{else}}
+                                                    <option>1</option>
+                                                {{/if}}
+                                                {{#if totalDishPerPageOption2Selected}}
+                                                    <option selected>2</option>
+                                                {{else}}
+                                                    <option>2</option>
+                                                {{/if}}
+                                                {{#if totalDishPerPageOption3Selected}}
+                                                    <option selected>3</option>
+                                                {{else}}
+                                                    <option>3</option>
+                                                {{/if}}
                                             </select>
                                         </div>
 
@@ -86,7 +98,7 @@
                                 <div class="col-lg-2">
                                     <div class="btn-toolbar float-lg-right form-group mb-0" role="toolbar">
                                         <div class="">
-                                            <a href="/manage-dishes/add" class="btn btn-info waves-effect waves-light  m-r-5" role="button"><i class="fas fa-plus"></i> <i></i> <span>Add Pizza</span> </a>
+                                            <a href="/manage-dishes/add" class="btn btn-info waves-effect waves-light  m-r-5" role="button"><i class="fas fa-plus"></i> <i></i> <span>Add New</span> </a>
                                         </div>
                                     </div>
                                 </div>
@@ -119,8 +131,8 @@
                                             <td>
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
-                                                        <a href="/manage-dishes/update/{{id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
-                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{id}}')">
+                                                        <a href="/manage-dishes/update/{{dish_id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
+                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{dish_id}}')">
                                                             <i class="far fa-trash-alt"></i>
                                                         </button>
                                                     </div>
@@ -210,7 +222,7 @@
 
     function changeCategory() {
         const categories = [1, 2, 3]
-        const category = categories[document.getElementById('category_option').selectedIndex]
+        const category = categories[document.getElementById('category').selectedIndex]
 
         gotoPage(category, 1)
     }

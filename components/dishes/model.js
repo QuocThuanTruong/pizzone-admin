@@ -2,7 +2,7 @@ const {db} = require('../../dal/db')
 
 function execQuery(queryString) {
     return new Promise(data => {
-        console.log(queryString)
+/*        console.log(queryString)*/
 
         db.query(queryString, (err, results, fields) => {
             if (err) {
@@ -17,6 +17,154 @@ function execQuery(queryString) {
             }
         })
     })
+}
+
+exports.modify = (fields) => {
+    let name = fields.name
+
+    let category = 0;
+    switch(fields.category) {
+        case 'Pizza' :
+            category = 1;
+            break;
+        case 'Thức uống':
+            category = 2;
+            break;
+        case 'Đồ ăn kèm':
+            category = 3;
+            break;
+    }
+
+    let subcategory = 0
+    switch(fields.subcategory) {
+        case 'Truyền thống' :
+            subcategory = 1;
+            break;
+        case 'Hải sản':
+            subcategory = 2;
+            break;
+        case 'Thập cẩm':
+            subcategory = 3;
+            break;
+    }
+
+    let igredients = ""
+
+    if (fields.igredients) {
+        igredients = fields.igredients
+    }
+
+    let description = fields.description
+    let price = parseInt(fields.price)
+    let discount = fields.discount
+
+    let sizes = []
+    switch (category) {
+        case 1: {
+            if (fields.size1 == 'on') {
+                sizes.push({
+                    name: "25cm (250g)",
+                })
+            }
+
+            if (fields.size2 == 'on') {
+                sizes.push({
+                    name: "30cm (450g)"
+                })
+            }
+
+            if (fields.size3 == 'on') {
+                sizes.push({
+                    name: "40cm (550g)"
+                })
+            }
+            break;
+        }
+        case 2: {
+            if (fields.size1 == 'on') {
+                sizes.push({
+                    name: "L"
+                })
+            }
+
+            if (fields.size2 == 'on') {
+                sizes.push({
+                    name: "M"
+                })
+            }
+        }
+        case 3: {
+            if (fields.size1 == 'on') {
+                sizes.push({
+                    name: "1 Người ăn"
+                })
+            }
+
+            if (fields.size2 == 'on') {
+                sizes.push({
+                    name: "2 Người ăn"
+                })
+            }
+        }
+    }
+
+    let doughs = []
+
+    if (fields.dough1 == 'on') {
+        doughs.push({
+            name: "mỏng",
+        })
+    }
+
+    if (fields.dough2 == 'on') {
+        doughs.push({
+            name: "dày",
+        })
+    }
+
+    let toppings = []
+
+    if (fields.toping1 == 'on') {
+        toppings.push({
+            name: "ớt chuông",
+            image: "toping-1.jpg"
+        })
+    }
+
+    if (fields.toping2 == 'on') {
+        toppings.push({
+            name: "thịt xông khói",
+            image: "toping-2.jpg"
+        })
+    }
+
+    if (fields.toping3 == 'on') {
+        toppings.push({
+            name: "nấm",
+            image: "toping-3.jpg"
+        })
+    }
+
+    if (fields.toping4 == 'on') {
+        toppings.push({
+            name: "cải xà lách",
+            image: "toping-4.jpg"
+        })
+    }
+
+    return {
+        name: name,
+        category: category,
+        subcategory: subcategory,
+        avatar: "",
+        igredients: igredients,
+        detail_description: description,
+        price: price,
+        discount: discount,
+        size: sizes,
+        dough: doughs,
+        topping: toppings
+    }
 }
 
 exports.dishlist = async (page, totalDishPerPage) => {
@@ -111,6 +259,41 @@ exports.totalDishByCategory = async (categoryId) => {
 
 exports.searchByKeyName = async (keyName) => {
     return await execQuery('SELECT * FROM dishes WHERE name LIKE \'%'+keyName+'%\' AND is_active = 1')
+}
+
+exports.delete = async (id) => {
+    const _ = await execQuery('UPDATE dishes SET is_active = 0 WHERE dish_id = '+id)
+}
+
+exports.getMaxId = async () => {
+    const result = await execQuery('SELECT MAX(dish_id) as max from dishes')
+
+    return result[0].max
+}
+
+exports.insert = async (dish) => {
+    const dish_id = (await this.getMaxId()) + 1
+    await execQuery('INSERT INTO dishes(dish_id, name, category, subcategory, avatar, igredients, detail_description, price, discount, rate, total_reviews, status, is_active) VALUES ('+dish_id+',\''+dish.name+'\','+dish.category+','+dish.subcategory+',\''+dish.avatar+'\',\''+dish.igredients+'\',\''+dish.detail_description+'\','+dish.price+','+dish.discount+', 4, 120, 1, 1)')
+
+    for (const size of dish.size) {
+        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price) VALUES ('+dish_id+',\''+size.name+'\',20000)')
+    }
+
+    if (dish.category === 1) {
+        for (const dough of dish.dough) {
+            await execQuery('INSERT INTO dishes_doughs(dish, name, extra_price) VALUES ('+dish_id+',\''+dough.name+'\',20000)')
+        }
+
+        for (const topping of dish.topping) {
+            await execQuery('INSERT INTO dishes_toppings(dish, name, extra_price) VALUES ('+dish_id+',\''+topping.name+'\',20000)')
+        }
+    }
+
+    let item_no = 0
+    for (const image of dish.images) {
+        item_no++
+        await execQuery('INSERT INTO dishes_images(dish, image_no, image_url) VALUES ('+dish_id+','+item_no+',\''+image.src+'\')')
+    }
 }
 
 /*
