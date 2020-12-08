@@ -39,6 +39,57 @@ function helper(hbs) {
         return html
     });
 
+    hbs.registerHelper('index', (i) => {
+        return i + 1
+    })
+
+    hbs.registerHelper("isTraditional", (subcategory) => {
+        return subcategory === 1
+    })
+
+    hbs.registerHelper("isSea", (subcategory) => {
+        return subcategory === 2
+    })
+
+    hbs.registerHelper("isMixed", (subcategory) => {
+        return subcategory === 3
+    })
+
+    hbs.registerHelper("size1", (size) => {
+        return (size.filter(s => s.name === '25cm (250g)').length > 0 || size.filter(s => s.name === 'L').length > 0 || size.filter(s => s.name === '1 Người ăn').length > 0)
+    })
+
+    hbs.registerHelper("size2", (size) => {
+        return (size.filter(s => s.name === '30cm (450g)').length > 0 || size.filter(s => s.name === 'M').length > 0 || size.filter(s => s.name === '2 Người ăn').length > 0)
+    })
+
+    hbs.registerHelper("size3", (size) => {
+        return size.filter(s => s.name === '40cm (550g)').length > 0
+    })
+
+    hbs.registerHelper("dough1", (dough) => {
+        return dough.filter(d => d.name === 'Mỏng').length > 0
+    })
+
+    hbs.registerHelper("dough2", (dough) => {
+        return dough.filter(d => d.name === 'Dày').length > 0
+    })
+
+    hbs.registerHelper("toping1", (topping) => {
+        return topping.filter(t => t.name === 'Ớt chuông').length > 0
+    })
+
+    hbs.registerHelper("toping2", (topping) => {
+        return topping.filter(t => t.name === 'Thịt xông khói').length > 0
+    })
+
+    hbs.registerHelper("toping3", (topping) => {
+        return topping.filter(t => t.name === 'Nấm').length > 0
+    })
+
+    hbs.registerHelper("toping4", (topping) => {
+        return topping.filter(t => t.name === 'Cải xà lách').length > 0
+    })
 }
 
 module.exports = helper;

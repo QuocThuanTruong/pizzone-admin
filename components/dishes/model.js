@@ -19,7 +19,9 @@ function execQuery(queryString) {
     })
 }
 
-exports.modify = (fields) => {
+exports.modify = async (fields) => {
+    let dish_id = (await this.getMaxId()) + 1
+
     let name = fields.name
 
     let category = 0;
@@ -112,13 +114,13 @@ exports.modify = (fields) => {
 
     if (fields.dough1 == 'on') {
         doughs.push({
-            name: "mỏng",
+            name: "Mỏng",
         })
     }
 
     if (fields.dough2 == 'on') {
         doughs.push({
-            name: "dày",
+            name: "Dày",
         })
     }
 
@@ -126,33 +128,34 @@ exports.modify = (fields) => {
 
     if (fields.toping1 == 'on') {
         toppings.push({
-            name: "ớt chuông",
-            image: "toping-1.jpg"
+            name: "Ớt chuông",
+            img_url: "/img/toping/toping-1.jpg"
         })
     }
 
     if (fields.toping2 == 'on') {
         toppings.push({
-            name: "thịt xông khói",
-            image: "toping-2.jpg"
+            name: "Thịt xông khói",
+            img_url: "/img/toping/toping-2.jpg"
         })
     }
 
     if (fields.toping3 == 'on') {
         toppings.push({
-            name: "nấm",
-            image: "toping-3.jpg"
+            name: "Nấm",
+            img_url: "/img/toping/toping-3.jpg"
         })
     }
 
     if (fields.toping4 == 'on') {
         toppings.push({
-            name: "cải xà lách",
-            image: "toping-4.jpg"
+            name: "Cải xà lách",
+            img_url: "/img/toping/toping-4.jpg"
         })
     }
 
     return {
+        dish_id: dish_id,
         name: name,
         category: category,
         subcategory: subcategory,
@@ -168,7 +171,7 @@ exports.modify = (fields) => {
 }
 
 exports.dishlist = async (page, totalDishPerPage) => {
-    return await execQuery('SELECT * FROM dishes WHERE is_active = 1 LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
+    return await execQuery('SELECT * FROM dishes WHERE is_active = 1 ORDER BY dish_id LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
 }
 
 exports.pizzaList = async () => {
@@ -184,7 +187,7 @@ exports.sideList = async () => {
 }
 
 exports.listByCategory = async (categoryId, page, totalDishPerPage) => {
-    return await execQuery('SELECT * FROM dishes WHERE category = ' +categoryId + ' AND is_active = 1 LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
+    return await execQuery('SELECT * FROM dishes WHERE category = ' +categoryId + ' AND is_active = 1 ORDER BY dish_id LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
 }
 
 exports.getDishById = async (id) => {
@@ -276,7 +279,7 @@ exports.insert = async (dish) => {
     await execQuery('INSERT INTO dishes(dish_id, name, category, subcategory, avatar, igredients, detail_description, price, discount, rate, total_reviews, status, is_active) VALUES ('+dish_id+',\''+dish.name+'\','+dish.category+','+dish.subcategory+',\''+dish.avatar+'\',\''+dish.igredients+'\',\''+dish.detail_description+'\','+dish.price+','+dish.discount+', 4, 120, 1, 1)')
 
     for (const size of dish.size) {
-        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price) VALUES ('+dish_id+',\''+size.name+'\',20000)')
+        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price, is_active) VALUES ('+dish_id+',\''+size.name+'\',20000, 1)')
     }
 
     if (dish.category === 1) {
@@ -285,7 +288,7 @@ exports.insert = async (dish) => {
         }
 
         for (const topping of dish.topping) {
-            await execQuery('INSERT INTO dishes_toppings(dish, name, extra_price) VALUES ('+dish_id+',\''+topping.name+'\',20000)')
+            await execQuery('INSERT INTO dishes_toppings(dish, name, extra_price, img_url) VALUES ('+dish_id+',\''+topping.name+'\',20000,\''+topping.img_url+'\')')
         }
     }
 
@@ -293,6 +296,36 @@ exports.insert = async (dish) => {
     for (const image of dish.images) {
         item_no++
         await execQuery('INSERT INTO dishes_images(dish, image_no, image_url) VALUES ('+dish_id+','+item_no+',\''+image.src+'\')')
+    }
+}
+
+exports.update = async (dish) => {
+    await execQuery('UPDATE dishes SET name = \''+dish.name+'\', category = '+dish.category+', subcategory = '+dish.subcategory+', avatar = \''+dish.avatar+'\',igredients = \''+dish.igredients+'\', detail_description = \''+dish.detail_description+'\',price = '+dish.price+', discount = '+dish.discount+' where dish_id = '+dish.dish_id)
+
+    await execQuery('DELETE FROM dishes_sizes WHERE dish = '+dish.dish_id)
+
+    for (const size of dish.size) {
+        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price, is_active) VALUES ('+dish.dish_id+',\''+size.name+'\',20000, 1)')
+    }
+
+    if (dish.category === 1) {
+        await execQuery('DELETE FROM dishes_doughs WHERE dish = '+dish.dish_id)
+        for (const dough of dish.dough) {
+            await execQuery('INSERT INTO dishes_doughs(dish, name, extra_price) VALUES ('+dish.dish_id+',\''+dough.name+'\',20000)')
+        }
+
+        await execQuery('DELETE FROM dishes_toppings WHERE dish = '+dish.dish_id)
+        for (const topping of dish.topping) {
+            await execQuery('INSERT INTO dishes_toppings(dish, name, extra_price, img_url) VALUES ('+dish.dish_id+',\''+topping.name+'\',20000,\''+topping.img_url+'\')')
+        }
+    }
+
+    await execQuery('DELETE FROM dishes_images WHERE dish = '+dish.dish_id)
+
+    let item_no = 0
+    for (const image of dish.images) {
+        item_no++
+        await execQuery('INSERT INTO dishes_images(dish, image_no, image_url) VALUES ('+dish.dish_id+','+item_no+',\''+image.src+'\')')
     }
 }
 

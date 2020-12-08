@@ -119,8 +119,211 @@ exports.delete = async (req, res, next) => {
     this.index(req, res, next)
 }
 
-exports.update = (req, res, next) => {
-   res.render('.././components/dishes/views/update');
+exports.update = async (req, res, next) => {
+    let categoryParams = req.query.category
+
+    let dish_id = req.params.id
+
+    let dish = await dishModel.getDishById(dish_id)
+    let images = await dishModel.getListImageById(dish_id)
+    let size = await dishModel.getListSizeById(dish_id)
+    let dough = await dishModel.getListDoughById(dish_id)
+    let topping = await dishModel.getListToppingById(dish_id)
+
+    let isPizzaSelected = false;
+    let isDrinkSelected = false;
+    let isSideSelected = false;
+
+    /* console.log(categoryId)*/
+    if (categoryParams !== undefined) {
+        categoryParams = parseInt(categoryParams)
+        switch (categoryParams) {
+            case 1:
+                isPizzaSelected = true;
+                break;
+
+            case 2:
+                isDrinkSelected = true;
+                break;
+
+            case 3:
+                isSideSelected = true;
+                break;
+        }
+
+        if (categoryParams !== dish.category) {
+            for (let s of size) {
+                s.name = ''
+            }
+        }
+    } else {
+        switch (dish.category) {
+            case 1:
+                isPizzaSelected = true;
+                break;
+
+            case 2:
+                isDrinkSelected = true;
+                break;
+
+            case 3:
+                isSideSelected = true;
+                break;
+        }
+    }
+
+    let dataContext = dish
+
+    dataContext.isPizzaSelected = isPizzaSelected
+    dataContext.isDrinkSelected = isDrinkSelected
+    dataContext.isSideSelected = isSideSelected
+    dataContext.images = images
+    dataContext.size = size
+    dataContext.dough = dough
+    dataContext.topping = topping
+
+    console.log(dataContext)
+
+    res.render('.././components/dishes/views/update', dataContext);
+}
+
+exports.updateInfo = async (req, res, next) => {
+    fs.mkdirSync(path.join(__dirname, '..', 'tempImages'), { recursive: true })
+    const form = formidable({multiples: true, keepExtensions: true, uploadDir : path.join(__dirname, '..', 'tempImages')})
+
+    let oldDish =  await dishModel.getDishById(req.params.id)
+    let oldImages = await dishModel.getListImageById(req.params.id)
+
+    await form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return
+        }
+
+        let dish = await dishModel.modify(fields);
+        dish.dish_id = req.params.id
+
+        let categoryName;
+        switch (dish.category) {
+            case 1:
+                categoryName = 'pizza';
+                break;
+            case 2:
+                categoryName = 'drink';
+                break;
+            case 3:
+                categoryName = 'side';
+                break;
+        }
+
+        const avatarPicker = files.avatarPicker
+        if (avatarPicker) {
+            if (avatarPicker.name) {
+                await cloudinary.uploader.upload(avatarPicker.path,
+                    {
+                        folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
+                        public_id: 'avatar',
+                        overwrite: true
+                    }, (err, res) => {
+                        dish.avatar = res.secure_url
+                    })
+            }
+            else {
+                dish.avatar = ""
+            }
+        } else {
+            dish.avatar = oldDish.avatar
+        }
+
+        let images = []
+
+        const descriptionPicker1 = files.descriptionPicker1
+        if (descriptionPicker1) {
+            if (descriptionPicker1.name) {
+                await cloudinary.uploader.upload(descriptionPicker1.path,
+                    {
+                        folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
+                        public_id: 'description-1',
+                        overwrite: true
+                    }, (err, res) => {
+                        images.push({src: res.secure_url})
+                    })
+            }
+            else {
+                images.push({src: ""})
+            }
+        } else {
+            images.push({src: oldImages[0].image_url})
+        }
+
+        console.log(oldImages)
+
+        const descriptionPicker2 = files.descriptionPicker2
+        if (descriptionPicker2) {
+            if (descriptionPicker2.name) {
+                await cloudinary.uploader.upload(descriptionPicker2.path,
+                    {
+                        folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
+                        public_id: 'description-2',
+                        overwrite: true
+                    }, (err, res) => {
+                        images.push({src: res.secure_url})
+                    })
+            }
+            else {
+                images.push({src: ""})
+            }
+        } else {
+            images.push({src: oldImages[1].image_url})
+        }
+
+        const descriptionPicker3 = files.descriptionPicker3
+        if (descriptionPicker3) {
+            if (descriptionPicker3.name) {
+                await cloudinary.uploader.upload(descriptionPicker3.path,
+                    {
+                        folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
+                        public_id: 'description-3',
+                        overwrite: true
+                    }, (err, res) => {
+                        images.push({src: res.secure_url})
+                    })
+            }
+            else {
+                images.push({src: ""})
+            }
+        } else {
+            images.push({src: oldImages[2].image_url})
+        }
+
+        const descriptionPicker4 = files.descriptionPicker4
+        if (descriptionPicker4) {
+            if (descriptionPicker4.name) {
+                await cloudinary.uploader.upload(descriptionPicker4.path,
+                    {
+                        folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
+                        public_id: 'description-4',
+                        overwrite: true
+                    }, (err, res) => {
+                        images.push({src: res.secure_url})
+                    })
+            }
+            else {
+                images.push({src: ""})
+            }
+        } else {
+            images.push({src: oldImages[3].image_url})
+        }
+
+        //console.log(pizza)
+        dish.images = images
+
+        console.log(dish)
+        const _ = await dishModel.update(dish)
+
+        rimraf.sync(path.join(__dirname, '..', 'tempImages'))
+
+        this.update(req, res, next)
+    })
 }
 
 exports.add = (req, res, next) => {
@@ -167,15 +370,27 @@ exports.addInfo = async (req, res, next) => {
             return
         }
 
-        let dish = dishModel.modify(fields)
+        let dish = await dishModel.modify(fields)
         dish.images = []
-        /*console.log(dish)*/
+
+        let categoryName;
+        switch (dish.category) {
+            case 1:
+                categoryName = 'pizza';
+                break;
+            case 2:
+                categoryName = 'drink';
+                break;
+            case 3:
+                categoryName = 'side';
+                break;
+        }
 
         const avatarPicker = files.avatarPicker
         if (avatarPicker.name) {
             await cloudinary.uploader.upload(avatarPicker.path,
                 {
-                    folder: 'WebFinalProject/Images/pizza/'+dish.dish_id,
+                    folder: 'WebFinalProject/Images/'+categoryName+'/'+dish.dish_id,
                     public_id: 'avatar',
                     overwrite: true
                 }, (err, res) => {
@@ -188,7 +403,7 @@ exports.addInfo = async (req, res, next) => {
             //upload description
             await cloudinary.uploader.upload(descriptionPicker1.path,
                 {
-                    folder: 'WebFinalProject/Images/pizza/'+dish.dish_id,
+                    folder: 'WebFinalProject/Images/'+categoryName+'/'+dish.dish_id,
                     public_id: 'description-1',
                     overwrite: true
                 }, (err, res) => {
@@ -203,7 +418,7 @@ exports.addInfo = async (req, res, next) => {
             //upload description
             await cloudinary.uploader.upload(descriptionPicker2.path,
                 {
-                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
                     public_id: 'description-2',
                     overwrite: true
                 }, (err, res) => {
@@ -218,7 +433,7 @@ exports.addInfo = async (req, res, next) => {
             //upload description
             await cloudinary.uploader.upload(descriptionPicker3.path,
                 {
-                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
                     public_id: 'description-3',
                     overwrite: true
                 }, (err, res) => {
@@ -233,7 +448,7 @@ exports.addInfo = async (req, res, next) => {
             //upload description
             await cloudinary.uploader.upload(descriptionPicker4.path,
                 {
-                    folder: 'WebFinalProject/Images/pizza/'+dish._id,
+                    folder: 'WebFinalProject/Images/'+categoryName+'/'+dish._id,
                     public_id: 'description-4',
                     overwrite: true
                 }, (err, res) => {
