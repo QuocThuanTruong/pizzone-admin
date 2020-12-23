@@ -35,7 +35,7 @@
                                 <div class="form-group">
                                     <label>Loại món ăn</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category" onchange="changeCategory()">
+                                        <select class="form-control" id="category" name="category" onchange="changeCategoryAdd()">
                                             {{#if isPizzaSelected}}
                                                 <option selected>Pizza</option>
                                             {{else}}
@@ -250,35 +250,5 @@
 </div>
 
 <script>
-    function changeCategory() {
-        const categories = [1, 2, 3]
-        const category = categories[document.getElementById('category').selectedIndex]
 
-        reloadPage(category)
-    }
-
-    function reloadPage(category) {
-        if (category === 0)
-            category = ""
-
-        const url='/manage-dishes/add?category='+category;
-
-        /*$.ajax({
-            url: url,
-            type: "GET",
-            success: function (data) {
-                console.log(data)
-                $("#pagination").html(data)
-            },
-            error: function (err) {
-                conole.log(err)
-            }
-        })*/
-
-        $.get(url, () => {
-
-        })
-
-        window.location.replace(url)
-    }
 </script>

@@ -14,12 +14,116 @@ cloudinary.config({
 });
 
 exports.index = async (req, res, next) => {
+    if ((Object.keys(req.query).length === 0 && req.query.constructor === Object) || (Object.keys(req.query).length === 1 && req.query.category!== undefined)) {
+        const key_name = req.query.key_name;
+
+        let categoryId = req.query.category;
+        let currentPage = req.query.page;
+        let totalDishPerPage = req.query.total_dish_per_page;
+
+        let sortBy = '1';
+
+        if (categoryId === undefined || categoryId === "")
+            categoryId = '1';
+
+        if (currentPage === undefined)
+            currentPage = '1';
+
+        if (totalDishPerPage === undefined)
+            totalDishPerPage = '1';
+
+        let totalPage;
+        let dishes;
+        let totalResult = 0;
+
+        let isPizzaSelected = false;
+        let isDrinkSelected = false;
+        let isSideSelected = false;
+
+        /*console.log("Key name: ", key_name)*/
+
+        if (key_name !== undefined) {
+            dishes = await dishModel.searchByKeyName(key_name)
+
+            totalResult = dishes.length
+        } else {
+            dishes = await dishModel.listByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
+
+            totalResult = await dishModel.totalDishByCategory(categoryId);
+
+            switch (categoryId) {
+                case '1':
+                    isPizzaSelected = true;
+                    break;
+
+                case '2':
+                    isDrinkSelected = true;
+                    break;
+
+                case '3':
+                    isSideSelected = true;
+                    break;
+            }
+
+            totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
+        }
+
+        let totalDishPerPageOption1Selected = false;
+        let totalDishPerPageOption2Selected = false;
+        let totalDishPerPageOption3Selected = false;
+
+        switch (totalDishPerPage) {
+            case '1':
+                totalDishPerPageOption1Selected = true;
+                break;
+            case '2':
+                totalDishPerPageOption2Selected = true;
+                break;
+            case '3':
+                totalDishPerPageOption3Selected = true;
+                break;
+
+        }
+
+        for (let dish of dishes) {
+            dish.categoryName = await dishModel.getCategoryName(dish.category)
+            dish.subCategoryName = await dishModel.getSubCategoryName(dish.subcategory)
+
+            const statusTitle = ['Đã xóa', 'Còn hàng', 'Hết hàng']
+            dish.statusName = statusTitle[dish.status]
+        }
+
+        const dataContext = {
+            isPizzaSelected: isPizzaSelected,
+            isDrinkSelected: isDrinkSelected,
+            isSideSelected: isSideSelected,
+            totalDishPerPageOption1Selected: totalDishPerPageOption1Selected,
+            totalDishPerPageOption2Selected: totalDishPerPageOption2Selected,
+            totalDishPerPageOption3Selected: totalDishPerPageOption3Selected,
+            totalResult: totalResult,
+            dishes: dishes,
+            totalPage: totalPage,
+            page: currentPage,
+            category: categoryId
+        }
+
+        /*console.log(dataContext)*/
+
+        res.render('.././components/dishes/views/index', dataContext);
+    } else {
+        this.pagination(req, res, next)
+    }
+}
+
+exports.pagination = async (req, res, next) => {
     const key_name = req.query.key_name;
 
     let categoryId = req.query.category;
     let currentPage = req.query.page;
     let totalDishPerPage = req.query.total_dish_per_page;
+    let sortBy = req.query.sortBy;
 
+    console.log(sortBy)
     /*console.log(req.query)*/
 
     if (categoryId === undefined || categoryId === "")
@@ -46,7 +150,7 @@ exports.index = async (req, res, next) => {
 
         totalResult = dishes.length
     } else {
-        dishes = await dishModel.listByCategory(categoryId, currentPage, totalDishPerPage)
+        dishes = await dishModel.listByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
 
         totalResult = await dishModel.totalDishByCategory(categoryId);
 
@@ -106,9 +210,7 @@ exports.index = async (req, res, next) => {
         category: categoryId
     }
 
-    /*console.log(dataContext)*/
-
-    res.render('.././components/dishes/views/index', dataContext);
+    res.send(dataContext)
 }
 
 exports.delete = async (req, res, next) => {

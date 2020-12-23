@@ -186,8 +186,25 @@ exports.sideList = async () => {
     return await execQuery('SELECT * FROM dishes WHERE category = 3 AND is_active = 1')
 }
 
-exports.listByCategory = async (categoryId, page, totalDishPerPage) => {
-    return await execQuery('SELECT * FROM dishes WHERE category = ' +categoryId + ' AND is_active = 1 ORDER BY dish_id LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
+exports.listByCategory = async (categoryId, page, totalDishPerPage, sortBy) => {
+    let sort = '';
+
+    switch (sortBy) {
+        case '1':
+            sort = 'created_date';
+            break;
+        case '2':
+            sort = 'name';
+            break;
+        case '3':
+            sort = 'price DESC';
+            break;
+        case '4':
+            sort = 'price ASC';
+            break;
+    }
+
+    return await execQuery('SELECT * FROM dishes WHERE category = ' +categoryId + ' AND is_active = 1 ORDER BY '+ sort +' LIMIT '+totalDishPerPage+' OFFSET '+((page - 1) * totalDishPerPage))
 }
 
 exports.getDishById = async (id) => {
