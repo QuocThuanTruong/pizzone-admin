@@ -13,7 +13,7 @@ selection: {
 }
 
 Selection support is enabled by setting the mode to one of "x", "y" or "xy".
-In "x" mode, the user will only be able to specify the x range, similarly for
+In "x" mode, the users will only be able to specify the x range, similarly for
 "y" mode. For "xy", the selection becomes a rectangle where both ranges can be
 specified. "color" is color of the selection (if you need to change the color
 later on, you can get to it with plot.getOptions().selection.color). "shape"
@@ -26,7 +26,7 @@ fact that it refers to pixels, not axis units must be taken into account.
 Thus, for example, if there is a bar graph in time mode with BarWidth set to 1
 minute, setting "minSize" to 1 will not make the minimum selection size 1
 minute, but rather 1 pixel. Note also that setting "minSize" to 0 will prevent
-"plotunselected" events from being fired when the user clicks the mouse without
+"plotunselected" events from being fired when the users clicks the mouse without
 dragging.
 
 When selection support is enabled, a "plotselected" event will be emitted on
@@ -39,12 +39,12 @@ parameter with the ranges selected on the axes, like this:
 		// x2axis, x3axis, ...
 	});
 
-The "plotselected" event is only fired when the user has finished making the
+The "plotselected" event is only fired when the users has finished making the
 selection. A "plotselecting" event is fired during the process with the same
 parameters as the "plotselected" event, in case you want to know what's
 happening while it's happening,
 
-A "plotunselected" event with no arguments is emitted when the user clicks the
+A "plotunselected" event with no arguments is emitted when the users clicks the
 mouse to remove the selection. As stated above, setting "minSize" to 0 will
 destroy this behavior.
 

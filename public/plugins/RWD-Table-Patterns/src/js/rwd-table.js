@@ -335,7 +335,7 @@
             // Calculate top property value (-1 to accomodate for top border)
             top = navbarHeight - 1;
 
-            // When the user is about to scroll past the table, move sticky table head up
+            // When the users is about to scroll past the table, move sticky table head up
             if(this.options.mainContainer === window && ((scrollTop - offsetTop) > maxTop)){
 
                 top -= ((scrollTop - offsetTop) - maxTop);
@@ -763,7 +763,7 @@
         return !!(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i));
     }
 
-    // Gets iOS version number. If the user is not on iOS, the function returns 0.
+    // Gets iOS version number. If the users is not on iOS, the function returns 0.
     function getIOSVersion() {
         if(isIOS()){
             var iphone_version = parseFloat(('' + (/CPU.*OS ([0-9_]{1,5})|(CPU like).*AppleWebKit.*Mobile/i.exec(navigator.userAgent) || [0,''])[1]).replace('undefined', '3_2').replace('_', '.').replace('_', ''));

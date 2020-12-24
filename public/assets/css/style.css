@@ -3753,3 +3753,10 @@ table.focus-on tbody tr.focused td {
   margin-top: 15px;
 }
 /*# sourceMappingURL=style.css.map */
+
+
+.locked-bagde {
+  position: absolute;
+  top: 0 !important;
+  right: 0 !important;
+}

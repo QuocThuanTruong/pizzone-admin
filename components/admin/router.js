@@ -5,4 +5,6 @@ const adminController = require('./controller');
 /* GET home page. */
 router.get('/', adminController.index);
 
+router.get('/admin/profile', adminController.profile);
+
 module.exports = router;
