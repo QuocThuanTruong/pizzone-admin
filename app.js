@@ -13,6 +13,7 @@ const adminRouter = require('./components/admin/router');
 const dishesRouter = require('./components/dishes/router');
 const usersRouter = require('./components/users/router')
 const ordersRouter = require('./components/orders/router')
+const categoriesRouter = require('./components/categories/router')
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use('/admin/profile', adminRouter);
 app.use('/manage-dishes', dishesRouter);
 app.use('/manage-users', usersRouter);
 app.use('/manage-orders', ordersRouter);
+app.use('/manage-categories', categoriesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
