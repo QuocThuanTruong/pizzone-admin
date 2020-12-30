@@ -9,6 +9,7 @@ require("dotenv").config();
 require('./components/admin/helper')(hbs);
 require('./components/dishes/helper')(hbs);
 
+const authRouter = require('./components/auth/router')
 const adminRouter = require('./components/admin/router');
 const dishesRouter = require('./components/dishes/router');
 const usersRouter = require('./components/users/router')
@@ -31,7 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', adminRouter);
+app.use('/', authRouter);
 app.use('/dashboard', adminRouter);
 app.use('/admin/profile', adminRouter);
 app.use('/manage-dishes', dishesRouter);

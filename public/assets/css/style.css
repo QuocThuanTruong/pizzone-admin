@@ -3764,3 +3764,11 @@ table.focus-on tbody tr.focused td {
 .m-r-20 {
   margin-right: 20px !important;
 }
+
+.m-l-20 {
+  margin-left: 20px !important;
+}
+
+.m-l-15 {
+  margin-left: 15px !important;
+}

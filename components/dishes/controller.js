@@ -104,7 +104,8 @@ exports.index = async (req, res, next) => {
             dishes: dishes,
             totalPage: totalPage,
             page: currentPage,
-            category: categoryId
+            category: categoryId,
+            isLogin: true
         }
 
         /*console.log(dataContext)*/
@@ -207,7 +208,8 @@ exports.pagination = async (req, res, next) => {
         dishes: dishes,
         totalPage: totalPage,
         page: currentPage,
-        category: categoryId
+        category: categoryId,
+        isLogin: true
     }
 
     res.send(dataContext)
@@ -457,7 +459,8 @@ exports.add = (req, res, next) => {
     const dataContext = {
         isPizzaSelected: isPizzaSelected,
         isDrinkSelected: isDrinkSelected,
-        isSideSelected: isSideSelected
+        isSideSelected: isSideSelected,
+        isLogin: true
     }
 
     res.render('.././components/dishes/views/add', dataContext);

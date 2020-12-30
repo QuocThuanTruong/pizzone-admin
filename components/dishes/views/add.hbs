@@ -117,81 +117,47 @@
                                 </div>
 
                                 <!-- load kích thước từ db -->
-                                {{#if isPizzaSelected}}
+
                                 <div class="form-group">
                                     <label>Kích thước</label>
-                                    <div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                   data-parsley-mincheck="1">
-                                            <label class="custom-control-label" for="size1"><p>25cm <span>(250g)</span></p>  </label>
+                                    <div class="row">
+                                        <input type="text" class="form-control col-md-2 m-l-15" required placeholder="Mô tả" name="discount" id="discount"/>
+                                        <div class="input-group col-md-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">VNĐ</span>
+                                            </div>
+                                        <input type="text" class="form-control " required placeholder="Giá tiền kèm theo" name="discount" id="discount"/>
                                         </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                   data-parsley-mincheck="1">
-                                            <label class="custom-control-label" for="size2"><p>30cm <span>(450g)</span></p>  </label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="size3" name="size3" data-parsley-multiple="groups"
-                                                   data-parsley-mincheck="1">
-                                            <label class="custom-control-label" for="size3"><p>40cm <span>(550g)</span></p>  </label>
-                                        </div>
+
+                                        <button type="submit" class="btn btn-success waves-effect waves-light ">
+                                            Thêm
+                                        </button>
                                     </div>
+
                                 </div>
-                                {{/if}}
 
-                                {{#if isDrinkSelected}}
-                                    <div class="form-group">
-                                        <label>Kích thước</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                       data-parsley-mincheck="1">
-                                                <label class="custom-control-label" for="size1"><p>L</p>  </label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                       data-parsley-mincheck="1">
-                                                <label class="custom-control-label" for="size2"><p>M</p>  </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
 
-                                {{#if isSideSelected}}
-                                    <div class="form-group">
-                                        <label>Kích thước</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                       data-parsley-mincheck="1">
-                                                <label class="custom-control-label" for="size1"><p>1 Người Ăn</p>  </label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                       data-parsley-mincheck="1">
-                                                <label class="custom-control-label" for="size2"><p>2 Người Ăn</p>  </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
+
 
                                 {{#if isPizzaSelected}}
-                                <div class="form-group">
-                                    <label>Đế bánh</label>
-                                    <div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="dough1" name="dough1" data-parsley-multiple="groups"
-                                                   data-parsley-mincheck="1">
-                                            <label class="custom-control-label" for="dough1">Mỏng</label>
+                                    <div class="form-group">
+                                        <label>Đế bánh</label>
+                                        <div class="row">
+                                            <input type="text" class="form-control col-md-2 m-l-15" required placeholder="Mô tả" name="dough" id="dough"/>
+                                            <div class="input-group col-md-2">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">VNĐ</span>
+                                                </div>
+                                                <input type="text" class="form-control " required placeholder="Giá tiền kèm theo" name="discount" id="discount"/>
+                                            </div>
+
+
+                                            <button type="submit" class="btn btn-success waves-effect waves-light ">
+                                                Thêm
+                                            </button>
                                         </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="dough2" name="dough2" data-parsley-multiple="groups"
-                                                   data-parsley-mincheck="1">
-                                            <label class="custom-control-label" for="dough2">Dày</label>
-                                        </div>
+
                                     </div>
-                                </div>
 
 
                                 <div class="form-group">
