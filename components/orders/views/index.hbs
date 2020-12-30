@@ -65,6 +65,12 @@
                                                 {{else}}
                                                     <option>Đã giao</option>
                                                 {{/if}}
+                                                {{#if isCanceled}}
+                                                    <option selected>Đã hủy</option>
+                                                {{else}}
+                                                    <option>Đã hủy</option>
+                                                {{/if}}
+
                                             </select>
                                         </div>
 
