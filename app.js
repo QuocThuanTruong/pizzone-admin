@@ -4,11 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var hbs = require('hbs');
+const session = require("express-session");
 
 require("dotenv").config();
 require('./components/admin/helper')(hbs);
 require('./components/dishes/helper')(hbs);
 
+const passport = require('./components/auth/passport')
 const authRouter = require('./components/auth/router')
 const adminRouter = require('./components/admin/router');
 const dishesRouter = require('./components/dishes/router');
@@ -32,9 +34,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({ secret: process.env.SESSION_SECRET }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use((req, res, next) => {
+  res.locals.admin = req.user;
+  console.log(res.locals.admin)
+  next()
+})
+
+
 app.use('/', authRouter);
+app.use('/auth', authRouter);
 app.use('/dashboard', adminRouter);
-app.use('/admin/profile', adminRouter);
 app.use('/manage-dishes', dishesRouter);
 app.use('/manage-users', usersRouter);
 app.use('/manage-orders', ordersRouter);

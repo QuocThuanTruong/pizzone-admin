@@ -1,8 +1,5 @@
 <!-- Begin page -->
 <div class="accountbg"></div>
-<div class="home-btn d-none d-sm-block">
-    <a href="index.html" class="text-white"><i class="fas fa-home h2"></i></a>
-</div>
 <div class="wrapper-page">
     <div class="card card-pages shadow-none">
 
@@ -12,19 +9,19 @@
             </div>
             <h5 class="font-18 text-center">Sign in to continue</h5>
 
-            <form class="form-horizontal m-t-30" action="index.html">
+            <form class="form-horizontal m-t-30" action="/login" method="post" onsubmit="return(checkUser())">
 
                 <div class="form-group">
                     <div class="col-12">
                         <label>Username</label>
-                        <input class="form-control" type="text" required="" placeholder="Username">
+                        <input class="form-control" type="text" id="username-sign-in" name="username" required="" placeholder="Username">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-12">
                         <label>Password</label>
-                        <input class="form-control" type="password" required="" placeholder="Password">
+                        <input class="form-control" type="password" id="password-sign-in" name="password" required="" placeholder="Password">
                     </div>
                 </div>
 

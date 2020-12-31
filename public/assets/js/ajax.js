@@ -107,3 +107,31 @@ function reloadPage(category) {
 
     window.location.replace(url)
 }
+
+function checkUser() {
+    let username = document.getElementById('username-sign-in').value;
+    let password = document.getElementById('password-sign-in').value;
+    let result = true;
+
+    const url='auth/api/check-user?username=' + username + '&password=' + password;
+    console.log(url)
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            console.log(data)
+
+            if (!data) {
+                result = false;
+                alert('username or password is incorrect')
+            }
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
+
+    console.log('reuslt' + result)
+
+    return result;
+}
