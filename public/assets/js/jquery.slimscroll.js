@@ -39,7 +39,7 @@
         // enables always-on mode for the scrollbar
         alwaysVisible : false,
 
-        // check if we should hide the scrollbar when user is hovering over
+        // check if we should hide the scrollbar when users is hovering over
         disableFadeOut : false,
 
         // sets visibility of the rail
@@ -69,7 +69,7 @@
         // scroll amount applied to each mouse wheel step
         wheelStep : 20,
 
-        // scroll amount applied when user is using gestures
+        // scroll amount applied when users is using gestures
         touchScrollStep : 200,
 
         // sets border radius
@@ -285,7 +285,7 @@
 		      }
           if (e.originalEvent.touches.length)
           {
-            // see how far user swiped
+            // see how far users swiped
             var diff = (touchDif - e.originalEvent.touches[0].pageY) / o.touchScrollStep;
             // scroll content
             scrollContent(diff, true);

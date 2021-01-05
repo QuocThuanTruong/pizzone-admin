@@ -131,7 +131,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         },
         cancel: function() {   
             /**        
-            Fired when form was cancelled by user
+            Fired when form was cancelled by users
             @event cancel 
             @param {Object} event event object
             **/              
@@ -332,7 +332,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
                     $.extend(params, this.options.params);
                 }
 
-                if(typeof this.options.url === 'function') { //user's function
+                if(typeof this.options.url === 'function') { //users's function
                     return this.options.url.call(this.options.scope, params);
                 } else {  
                     //send ajax to server and return deferred object
@@ -532,7 +532,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         Usefull to work with json response. For example, if your backend response can be <code>{success: true}</code>
         or <code>{success: false, msg: "server error"}</code> you can check it inside this callback.  
         If it returns **string** - means error occured and string is shown as error message.  
-        If it returns **object like** <code>{newValue: &lt;something&gt;}</code> - it overwrites value, submitted by user.  
+        If it returns **object like** <code>{newValue: &lt;something&gt;}</code> - it overwrites value, submitted by users.
         Otherwise newValue simply rendered into element.
         
         @property success 
@@ -1361,7 +1361,7 @@ Applied as jQuery method.
         **/        
         autohide: true,
         /**
-        Action when user clicks outside the container. Can be <code>cancel|submit|ignore</code>.  
+        Action when users clicks outside the container. Can be <code>cancel|submit|ignore</code>.
         Setting <code>ignore</code> allows to have several containers open. 
 
         @property onblur 
@@ -1608,7 +1608,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
            this.$element.on(this.options.toggle + '.editable', selector, $.proxy(function(e){
                var $target = $(e.target);
                if(!$target.data('editable')) {
-                   //if delegated element initially empty, we need to clear it's text (that was manually set to `empty` by user)
+                   //if delegated element initially empty, we need to clear it's text (that was manually set to `empty` by users)
                    //see https://github.com/vitalets/x-editable/issues/137 
                    if($target.hasClass(this.options.emptyclass)) {
                       $target.empty();
@@ -1833,7 +1833,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
             if(this.options.unsavedclass) {
                 /*
                  Add unsaved css to element if:
-                  - url is not user's function 
+                  - url is not users's function
                   - value was not sent to server
                   - params.response === undefined, that means data was not sent
                   - value changed 
@@ -2288,7 +2288,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         @since 1.4.1        
         @default null
         @example
-        <div id="user">
+        <div id="users">
           <!-- empty -->
           <a href="#" data-name="username" data-type="text" class="editable-click editable-empty" data-value="" title="Username">Empty</a>
           <!-- non-empty -->
@@ -2296,7 +2296,7 @@ Makes editable any HTML element on the page. Applied as jQuery method.
         </div>     
         
         <script>
-        $('#user').editable({
+        $('#users').editable({
             selector: 'a',
             url: '/post',
             pk: 1
@@ -3810,19 +3810,19 @@ $(function(){
                this.$input.val(value);
                this.$input.select2(this.options.select2);
            } else {
-               //second argument needed to separate initial change from user's click (for autosubmit)   
+               //second argument needed to separate initial change from users's click (for autosubmit)
                this.$input.val(value).trigger('change', true); 
 
                //Uncaught Error: cannot call val() if initSelection() is not defined
                //this.$input.select2('val', value);
            }
 
-           // if defined remote source AND no multiple mode AND no user's initSelection provided --> 
+           // if defined remote source AND no multiple mode AND no users's initSelection provided -->
            // we should somehow get text for provided id.
            // The solution is to use element's text as text for that id (exclude empty)
            if(this.isRemote && !this.isMultiple && !this.options.select2.initSelection) {
                // customId and customText are methods to extract `id` and `text` from data object
-               // we can use this workaround only if user did not define these methods
+               // we can use this workaround only if users did not define these methods
                // otherwise we cant construct data object
                var customId = this.options.select2.id,
                    customText = this.options.select2.formatSelection;

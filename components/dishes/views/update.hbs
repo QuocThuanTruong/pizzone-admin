@@ -82,6 +82,35 @@
                                     </div>
                                 {{/if}}
 
+
+                                <!-- lấy từ db có thì mới hiện, không có thì khỏi hiện nha bro -->
+                                {{#if isDrinkSelected}}
+                                    <div class="form-group">
+                                        <label>Loại thức uống</label>
+                                        <div >
+                                            <select class="form-control" id="subcategory" name="subcategory">
+                                                <option>Truyền thống</option>
+                                                <option>Hải sản</option>
+                                                <option>Thập cẩm</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                {{/if}}
+
+                                {{#if isSideSelected}}
+                                    <div class="form-group">
+                                        <label>Loại đồ ăn kèm</label>
+                                        <div >
+                                            <select class="form-control" id="subcategory" name="subcategory">
+                                                <option>Truyền thống</option>
+                                                <option>Hải sản</option>
+                                                <option>Thập cẩm</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                {{/if}}
+
+
                                 <div class="form-group col-sm-2 img-picker-container">
                                     <label>Ảnh đại diện</label>
                                     <div class="img-picker" id="avatarPicker" data-url="{{avatar}}"></div>
@@ -131,174 +160,38 @@
                                 </div>
 
                                 <!-- load kích thước từ db -->
-                                {{#if isPizzaSelected}}
                                     <div class="form-group">
                                         <label>Kích thước</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size1 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size1"><p>25cm <span>(250g)</span></p>  </label>
+                                        <div class="row">
+                                            <input type="text" class="form-control col-md-2 m-l-15" required placeholder="Mô tả" name="dough" id="dough"/>
+                                            <div class="input-group col-md-2">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">VNĐ</span>
+                                                </div>
+                                                <input type="text" class="form-control " required placeholder="Giá tiền kèm theo" name="discount" id="discount"/>
                                             </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size2 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size2"><p>30cm <span>(450g)</span></p>  </label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size3 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size3" name="size3" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size3" name="size3" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size3"><p>40cm <span>(550g)</span></p>  </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
 
-                                {{#if isDrinkSelected}}
-                                    <div class="form-group">
-                                        <label>Kích thước</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size1 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" >
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size1"><p>L</p>  </label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size2 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" >
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size2"><p>M</p>  </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
 
-                                {{#if isSideSelected}}
-                                    <div class="form-group">
-                                        <label>Kích thước</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size1 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size1" name="size1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" >
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size1"><p>1 Người Ăn</p>  </label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (size2 size)}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="size2" name="size2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" >
-                                                {{/if}}
-                                                <label class="custom-control-label" for="size2"><p>2 Người Ăn</p>  </label>
-                                            </div>
+                                            <button type="button" class="btn btn-success waves-effect waves-light ">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
                                         </div>
-                                    </div>
-                                {{/if}}
 
-                                {{#if isPizzaSelected}}
-                                    <div class="form-group">
-                                        <label>Đế bánh</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (dough1 dough)}}
-                                                    <input type="checkbox" class="custom-control-input" id="dough1" name="dough1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="dough1" name="dough1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="dough1">Mỏng</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (dough2 dough)}}
-                                                    <input type="checkbox" class="custom-control-input" id="dough2" name="dough2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="dough2" name="dough2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="dough2">Dày</label>
-                                            </div>
+                                        <div class="m-t-20">
+                                            <ul class="list-option-menu col-md-4 ">
+                                                <li>Agnes (+10.000 đ)<span class="close">x</span></li>
+
+                                                <li>Billy (+10.000 đ)<span class="close">x</span></li>
+                                                <li>Bob (+10.000 đ)<span class="close">x</span></li>
+
+                                                <li>Calvin (+10.000 đ)<span class="close">x</span></li>
+                                                <li>Christina (+10.000 đ)<span class="close">x</span></li>
+                                            </ul>
                                         </div>
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <label>Toping đi kèm</label>
-                                        <div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (toping1 topping)}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping1" name="toping1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping1" name="toping1" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="toping1">Ớt chuông</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (toping2 topping)}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping2" name="toping2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping2" name="toping2" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="toping2">Thịt xông khói</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (toping3 topping)}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping3" name="toping3" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping3" name="toping3" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="toping3">Nấm</label>
-                                            </div>
-                                            <div class="custom-control custom-checkbox">
-                                                {{#if (toping4 topping)}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping4" name="toping4" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1" checked>
-                                                {{else}}
-                                                    <input type="checkbox" class="custom-control-input" id="toping4" name="toping4" data-parsley-multiple="groups"
-                                                           data-parsley-mincheck="1">
-                                                {{/if}}
-                                                <label class="custom-control-label" for="toping4">Cải xà lách</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
+
 
                                 <div class="form-group">
                                     <div>

@@ -1,0 +1,99 @@
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">User profile</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Manage users</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0);">Profile</a></li>
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+
+                            <!-- Form -->
+                            <form method="POST" action="/" enctype="multipart/form-data">
+
+                                <div class="form-group col-sm-2 img-picker-container">
+                                    <label>Ảnh đại diện</label>
+
+                                    <div >
+                                        {{#if isLocked}}
+                                            <div class="locked-bagde"><h5><span class="badge badge-danger">BỊ KHÓA</span></h5></div>
+                                        {{/if}}
+                                        <img style="width: 200px; height: 200px;" src="https://res.cloudinary.com/hcmus-web/image/upload/v1606980372/WebFinalProject/Images/pizza/5fc62061f6e7e94e67fdbc18/avatar_azutvf.png" data-holder-rendered="true">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Họ và tên</label>
+                                    <input type="text" class="form-control" readonly placeholder="Họ và tên" name="name" id="name"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+
+                                    <input type="text" class="form-control" readonly placeholder="Email" name="email" id="email"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Số điện thoại</label>
+
+                                    <input type="text" class="form-control" readonly placeholder="Số điện thoại" name="phone" id="phone"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Địa chỉ</label>
+
+                                    <input type="text" class="form-control" readonly placeholder="Địa chỉ" name="address" id="address"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+
+                                        {{#if isLocked }}
+                                        <button type="submit" class="btn btn-success waves-effect waves-light">
+                                            Mở khóa người dùng này
+                                        </button>
+
+                                        {{else}}
+
+                                        <button type="submit" class="btn btn-danger waves-effect waves-light">
+                                            Khóa người dùng này
+                                        </button>
+                                        {{/if}}
+
+
+                                        <a href="/manage-users">
+                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                                Bỏ qua
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- content -->
+
+    <footer class="footer">
+        © 2020 Pizzone <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
+    </footer>
+</div>

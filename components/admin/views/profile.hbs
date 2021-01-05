@@ -1,0 +1,82 @@
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Admin profile</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0);">Profile</a></li>
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+
+                            <!-- Form -->
+                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+
+                                <div class="form-group col-sm-2 img-picker-container">
+                                    <label>Ảnh đại diện</label>
+                                    <div class="img-picker" id="avatarPicker" data-url=""></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Họ và tên</label>
+                                    <input type="text" class="form-control" required placeholder="Họ và tên" name="name" id="name"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Email</label>
+
+                                    <input type="text" class="form-control" required placeholder="Email" name="email" id="email"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Số điện thoại</label>
+
+                                    <input type="text" class="form-control" required placeholder="Số điện thoại" name="phone" id="phone"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Địa chỉ</label>
+
+                                    <input type="text" class="form-control" required placeholder="Địa chỉ" name="address" id="address"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                            Cập nhật
+                                        </button>
+
+                                        <a href="/manage-dishes">
+                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                                Bỏ qua
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- content -->
+
+    <footer class="footer">
+        © 2020 Pizzone <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
+    </footer>
+</div>

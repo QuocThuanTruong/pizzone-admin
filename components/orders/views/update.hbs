@@ -1,0 +1,184 @@
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Orders detail</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Manage orders</a></li>
+                            <li class="breadcrumb-item active">detail</li>
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="invoice-title">
+                                        <h4 class="float-right"><span class="badge badge-success">ĐÃ GIAO HÀNG</span></h4>
+                                        <h3 class="m-t-0">
+                                            <strong>Quốc Thuận Trương</strong>
+                                        </h3>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <address>
+                                                <strong>Địa chỉ giao hàng:</strong><br>
+                                                12344321, abc<br>
+                                            </address>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <address>
+                                                <strong>Payment Method:</strong><br>
+                                                Thanh toán khi nhận hàng
+                                            </address>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="panel panel-default">
+                                        <div class="p-2">
+                                            <h3 class="panel-title font-20"><strong>Chi tiết đơn hàng</strong></h3>
+                                        </div>
+                                        <div class="">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <td><strong>Món ăn</strong></td>
+                                                        <td class="text-center"><strong>Giá</strong></td>
+                                                        <td class="text-center"><strong>Số lượng</strong>
+                                                        </td>
+                                                        <td class="text-right"><strong>Tổng tiền</strong></td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                                    <tr>
+                                                        <td>BS-200</td>
+                                                        <td class="text-center">$10.99</td>
+                                                        <td class="text-center">1</td>
+                                                        <td class="text-right">$10.99</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>BS-400</td>
+                                                        <td class="text-center">$20.00</td>
+                                                        <td class="text-center">3</td>
+                                                        <td class="text-right">$60.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>BS-1000</td>
+                                                        <td class="text-center">$600.00</td>
+                                                        <td class="text-center">1</td>
+                                                        <td class="text-right">$600.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line"></td>
+                                                        <td class="thick-line text-center">
+                                                            <strong>Tổng tiền món ăn</strong></td>
+                                                        <td class="thick-line text-right">$670.99</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="no-line"></td>
+                                                        <td class="no-line"></td>
+                                                        <td class="no-line text-center">
+                                                            <strong>Phí vận chuyển</strong></td>
+                                                        <td class="no-line text-right">$15</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="no-line"></td>
+                                                        <td class="no-line"></td>
+                                                        <td class="no-line text-center ">
+                                                            <h5 class="m-0">TỔNG</h5></td>
+                                                        <td class="no-line text-right"><h4 class="m-0">$685.99</h4></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> <!-- end row -->
+
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="panel panel-default">
+                                        <div class="p-2">
+                                            <h3 class="panel-title font-20"><strong>Cập nhật trạng thái đơn hàng</strong></h3>
+                                            <hr>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-auto">
+                                            <form>
+                                                <div class="form-group">
+                                                    <div>
+                                                        <select class="form-control" id="sort-by" onchange="gotoPage({{category}}, 1)">
+                                                            <option>Đang chuẩn bị</option>
+                                                            <option>Đang giao</option>
+                                                            <option>Đã giao hàng</option>
+                                                            <option>Đã hủy</option>
+                                                        </select>
+
+
+
+                                                        <button type="submit" class="btn btn-success waves-effect waves-light m-t-10">
+                                                            Cập nhật
+                                                        </button>
+
+
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+
+        </div>
+        <!-- container-fluid -->
+
+    </div>
+    <!-- content -->
+
+
+</div>
+<!-- ============================================================== -->
+<!-- End Right content here -->
+<!-- ============================================================== -->

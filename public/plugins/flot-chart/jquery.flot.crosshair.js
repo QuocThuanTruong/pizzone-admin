@@ -21,7 +21,7 @@ The plugin also adds four public methods:
 
   - setCrosshair( pos )
 
-    Set the position of the crosshair. Note that this is cleared if the user
+    Set the position of the crosshair. Note that this is cleared if the users
     moves the mouse. "pos" is in coordinates of the plot and should be on the
     form { x: xpos, y: ypos } (you can use x2/x3/... if you're using multiple
     axes), which is coincidentally the same format as what you get from a
@@ -34,7 +34,7 @@ The plugin also adds four public methods:
   - lockCrosshair(pos)
 
     Cause the crosshair to lock to the current location, no longer updating if
-    the user moves the mouse. Optionally supply a position (passed on to
+    the users moves the mouse. Optionally supply a position (passed on to
     setCrosshair()) to move it to.
 
     Example usage:
