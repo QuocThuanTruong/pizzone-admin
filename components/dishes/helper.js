@@ -90,6 +90,14 @@ function helper(hbs) {
     hbs.registerHelper("toping4", (topping) => {
         return topping.filter(t => t.name === 'Cải xà lách').length > 0
     })
+
+    hbs.registerHelper('standardPrice', function(quantity, price) {
+        price *= quantity
+
+        let priceStr = price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1.').toString()
+
+        return priceStr.substr(0, priceStr.length - 3) + 'đ'
+    })
 }
 
 module.exports = helper;

@@ -26,16 +26,16 @@
                             <h4 class="mt-0 header-title">Cập nhật thông tin của món ăn đã chọn</h4>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/update/{{dish_id}}" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-dishes/update/{{dish.dish_id}}" enctype="multipart/form-data" id="new-dish-form" onsubmit="return(checkForm())">
                                 <div class="form-group">
                                     <label>Tên</label>
-                                    <input type="text" class="form-control" required placeholder="Tên sản phẩm" name="name" id="name" value="{{name}}"/>
+                                    <input type="text" class="form-control" required placeholder="Tên sản phẩm" name="name" id="name" value="{{dish.name}}"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Loại món ăn</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category" onchange="changeCategory({{dish_id}})">
+                                        <select class="form-control" id="category" name="category" onchange="changeCategoryUpdate({{dish.dish_id}})">
                                             {{#if isPizzaSelected}}
                                                 <option selected>Pizza</option>
                                             {{else}}
@@ -55,85 +55,43 @@
                                     </div>
                                 </div>
 
-                                {{#if isPizzaSelected}}
-                                    <div class="form-group">
-                                        <label>Loại pizza</label>
-                                        <div >
-                                            <select class="form-control" id="subcategory" name="subcategory">
-                                                {{#if (isTraditional subcategory)}}
-                                                    <option selected>Truyền thống</option>
-                                                {{else}}
-                                                    <option>Truyền thống</option>
-                                                {{/if}}
-
-                                                {{#if (isSea subcategory)}}
-                                                    <option selected>Hải sản</option>
-                                                {{else}}
-                                                    <option>Hải sản</option>
-                                                {{/if}}
-
-                                                {{#if (isMixed subcategory)}}
-                                                    <option selected>Thập cẩm</option>
-                                                {{else}}
-                                                    <option>Thập cẩm</option>
-                                                {{/if}}
-                                            </select>
-                                        </div>
+                                <div class="form-group">
+                                    <label>Loại pizza</label>
+                                    <div onload="loadSubcategory({{dish.subcategory}})">
+                                        <select class="form-control" id="subcategory" name="subcategory">
+                                            {{#each subcategories}}
+                                                <option>{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <script type="text/javascript">
+                                            loadSubcategory({{dish.subcategory}});
+                                        </script>
                                     </div>
-                                {{/if}}
-
-
-                                <!-- lấy từ db có thì mới hiện, không có thì khỏi hiện nha bro -->
-                                {{#if isDrinkSelected}}
-                                    <div class="form-group">
-                                        <label>Loại thức uống</label>
-                                        <div >
-                                            <select class="form-control" id="subcategory" name="subcategory">
-                                                <option>Truyền thống</option>
-                                                <option>Hải sản</option>
-                                                <option>Thập cẩm</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                {{/if}}
-
-                                {{#if isSideSelected}}
-                                    <div class="form-group">
-                                        <label>Loại đồ ăn kèm</label>
-                                        <div >
-                                            <select class="form-control" id="subcategory" name="subcategory">
-                                                <option>Truyền thống</option>
-                                                <option>Hải sản</option>
-                                                <option>Thập cẩm</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                {{/if}}
-
+                                </div>
 
                                 <div class="form-group col-sm-2 img-picker-container">
                                     <label>Ảnh đại diện</label>
-                                    <div class="img-picker" id="avatarPicker" data-url="{{avatar}}"></div>
+                                    <div class="img-picker" id="avatarPicker" data-url="{{dish.avatar}}"></div>
                                 </div>
 
                                 {{#if isPizzaSelected}}
                                     <div class="form-group">
                                         <label>Nguyên liệu</label>
-                                        <input type="text" class="form-control" required placeholder="Tên các loại nguyên liệu" name="igredients" id="igredients" value="{{igredients}}"/>
+                                        <input type="text" class="form-control" required placeholder="Tên các loại nguyên liệu" name="igredients" id="igredients" value="{{dish.igredients}}"/>
                                     </div>
                                 {{/if}}
 
                                 <div class="form-group">
                                     <label>Mô tả</label>
                                     <div>
-                                        <textarea required class="form-control" rows="5" required placeholder="Mô tả sản phẩm" name="description" id="description">{{detail_description}}</textarea>
+                                        <textarea required class="form-control" rows="5" required placeholder="Mô tả sản phẩm" name="description" id="description">{{dish.detail_description}}</textarea>
                                     </div>
                                 </div>
 
                                 <div class="form-group img-picker-container">
                                     <label>Ảnh mô tả</label>
                                     <div class="row">
-                                        {{#each images}}
+                                        {{#each dish.images}}
                                             <div class="img-picker col-sm-2" id="descriptionPicker{{index @index}}" data-url="{{image_url}}"></div>
                                         {{/each}}
                                     </div>
@@ -150,7 +108,7 @@
                                                placeholder="Giá tiền sản phẩm"
                                                name="price"
                                                id="price"
-                                               value="{{price}}"/>
+                                               value="{{dish.price}}"/>
                                     </div>
                                 </div>
 
@@ -163,35 +121,28 @@
                                     <div class="form-group">
                                         <label>Kích thước</label>
                                         <div class="row">
-                                            <input type="text" class="form-control col-md-2 m-l-15" required placeholder="Mô tả" name="dough" id="dough"/>
+                                            <input type="text" class="form-control col-md-2 m-l-15" placeholder="Mô tả" id="size-name"/>
                                             <div class="input-group col-md-2">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">VNĐ</span>
                                                 </div>
-                                                <input type="text" class="form-control " required placeholder="Giá tiền kèm theo" name="discount" id="discount"/>
+
+                                                <input type="number" class="form-control" placeholder="Giá tiền kèm theo"id="size-price"/>
                                             </div>
 
-
-                                            <button type="button" class="btn btn-success waves-effect waves-light ">
+                                            <button type="button" class="btn btn-success waves-effect waves-light" onclick="addSize()">
                                                 <i class="fa fa-plus"></i>
                                             </button>
                                         </div>
 
                                         <div class="m-t-20">
-                                            <ul class="list-option-menu col-md-4 ">
-                                                <li>Agnes (+10.000 đ)<span class="close">x</span></li>
-
-                                                <li>Billy (+10.000 đ)<span class="close">x</span></li>
-                                                <li>Bob (+10.000 đ)<span class="close">x</span></li>
-
-                                                <li>Calvin (+10.000 đ)<span class="close">x</span></li>
-                                                <li>Christina (+10.000 đ)<span class="close">x</span></li>
+                                            <ul class="list-option-menu col-md-4" id="size-list">
+                                                {{#each dish.size}}
+                                                    <li>{{name}} (+{{standardPrice 1 extra_price}})<span class="close" onclick="removeSize(this.parentNode)">x</span></li>
+                                                {{/each}}
                                             </ul>
                                         </div>
                                     </div>
-
-
-
 
                                 <div class="form-group">
                                     <div>
@@ -222,14 +173,19 @@
 </div>
 
 <script>
-    function changeCategory(id) {
+    function loadSubcategory(subcategory) {
+        console.log('ccccccccccc')
+        document.getElementById("subcategory").selectedIndex = (subcategory - 1).toString();
+    }
+
+    function changeCategoryUpdate(id) {
         const categories = [1, 2, 3]
         const category = categories[document.getElementById('category').selectedIndex]
 
-        reloadPage(category, id)
+        reloadPageUpdate(category, id)
     }
 
-    function reloadPage(category, id) {
+    function reloadPageUpdate(category, id) {
         if (category === 0)
             category = ""
 

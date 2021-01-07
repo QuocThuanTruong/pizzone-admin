@@ -229,14 +229,13 @@ exports.update = async (req, res, next) => {
     let dish_id = req.params.id
 
     let dish = await dishModel.getDishById(dish_id)
-    let images = await dishModel.getListImageById(dish_id)
-    let size = await dishModel.getListSizeById(dish_id)
-    let dough = await dishModel.getListDoughById(dish_id)
-    let topping = await dishModel.getListToppingById(dish_id)
+    dish.images = await dishModel.getListImageById(dish_id)
+    dish.size = await dishModel.getListSizeById(dish_id)
 
     let isPizzaSelected = false;
     let isDrinkSelected = false;
     let isSideSelected = false;
+    let subcategories
 
     /* console.log(categoryId)*/
     if (categoryParams !== undefined) {
@@ -255,11 +254,7 @@ exports.update = async (req, res, next) => {
                 break;
         }
 
-        if (categoryParams !== dish.category) {
-            for (let s of size) {
-                s.name = ''
-            }
-        }
+        subcategories = await dishModel.getListSubcategory(categoryParams)
     } else {
         switch (dish.category) {
             case 1:
@@ -274,17 +269,17 @@ exports.update = async (req, res, next) => {
                 isSideSelected = true;
                 break;
         }
+
+        subcategories = await dishModel.getListSubcategory(dish.category)
     }
 
-    let dataContext = dish
-
-    dataContext.isPizzaSelected = isPizzaSelected
-    dataContext.isDrinkSelected = isDrinkSelected
-    dataContext.isSideSelected = isSideSelected
-    dataContext.images = images
-    dataContext.size = size
-    dataContext.dough = dough
-    dataContext.topping = topping
+    let dataContext = {
+        dish: dish,
+        subcategories: subcategories,
+        isPizzaSelected : isPizzaSelected,
+        isDrinkSelected : isDrinkSelected,
+        isSideSelected : isSideSelected,
+    }
 
     console.log(dataContext)
 
@@ -302,6 +297,8 @@ exports.updateInfo = async (req, res, next) => {
         if (err) {
             return
         }
+
+        console.log(fields)
 
         let dish = await dishModel.modify(fields);
         dish.dish_id = req.params.id
@@ -430,7 +427,7 @@ exports.updateInfo = async (req, res, next) => {
     })
 }
 
-exports.add = (req, res, next) => {
+exports.add = async (req, res, next) => {
     let categoryId = req.query.category
 
     if (categoryId === undefined || categoryId === "")
@@ -456,10 +453,20 @@ exports.add = (req, res, next) => {
             break;
     }
 
+    let subcategories = await dishModel.getListSubcategory(categoryId)
+
+    let hasSubcategory = false;
+
+    if (subcategories.length > 0) {
+        hasSubcategory = true;
+    }
+
     const dataContext = {
         isPizzaSelected: isPizzaSelected,
         isDrinkSelected: isDrinkSelected,
         isSideSelected: isSideSelected,
+        hasSubcategory: hasSubcategory,
+        subcategories: subcategories,
         isLogin: true
     }
 
@@ -467,6 +474,8 @@ exports.add = (req, res, next) => {
 }
 
 exports.addInfo = async (req, res, next) => {
+    console.log(req.body)
+
     fs.mkdirSync(path.join(__dirname, '..', 'tempImages'), { recursive: true })
     const form = formidable({multiples: true, keepExtensions: true, uploadDir : path.join(__dirname, '..', 'tempImages')})
 
@@ -474,7 +483,7 @@ exports.addInfo = async (req, res, next) => {
         if (err) {
             return
         }
-
+        console.log(fields)
         let dish = await dishModel.modify(fields)
         dish.images = []
 
@@ -563,7 +572,7 @@ exports.addInfo = async (req, res, next) => {
             dish.images.push({src: ""})
         }
 
-        /*console.log(dish)*/
+        console.log(dish)
         const _ = await dishModel.insert(dish)
 
         rimraf.sync(path.join(__dirname, '..', 'tempImages'))

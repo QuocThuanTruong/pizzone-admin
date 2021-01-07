@@ -75,8 +75,6 @@ function changeCategory() {
 }
 
 function changeCategoryAdd() {
-    console.log('cc')
-
     const categories = [1, 2, 3]
     const category = categories[document.getElementById('category').selectedIndex]
 
@@ -134,4 +132,49 @@ function checkUser() {
     console.log('reuslt' + result)
 
     return result;
+}
+
+function addSize() {
+    let sizeName = document.getElementById('size-name').value;
+    let sizePrice = parseInt(document.getElementById('size-price').value);
+    let sizePriceStr = standardPrice(sizePrice)
+
+    $('#size-list').append('<li>'+sizeName+' (+'+sizePriceStr+')<span class="close" onclick="removeSize(this.parentNode)">x</span><input type="hidden" name="size-name[]" value="'+sizeName+'"/><input type="hidden" name="size-price[]" value="'+sizePrice+'"/></li>')
+    $('#size-name').val("");
+    $('#size-price').val("")
+}
+
+function removeSize(item) {
+    item.parentNode.removeChild(item);
+}
+
+function checkForm() {
+    let sizeNamesInput = document.getElementsByName('size-name[]');
+    let sizePricesInput = document.getElementsByName('size-price[]');
+
+    let sizeNamesValue = []
+    for (let i = 0; i < sizeNamesInput.length; i++) {
+        sizeNamesValue.push(sizeNamesInput[i].value)
+    }
+
+    let sizePricesValue = []
+    for (let i = 0; i < sizePricesInput.length; i++) {
+        sizePricesValue.push(sizePricesInput[i].value)
+    }
+
+    if (sizePricesInput.length === 0) {
+        alert('Không được bỏ trống phần kích thước')
+        return false;
+    }
+
+    $('#new-dish-form').append('<input type="hidden" name="sizeNames" value="'+sizeNamesValue+'"/>')
+    $('#new-dish-form').append('<input type="hidden" name="sizePrices" value="'+sizePricesValue+'"/>')
+
+    return true;
+}
+
+function standardPrice(price) {
+    let priceStr = price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1.').toString()
+
+    return priceStr.substr(0, priceStr.length - 3) + 'đ'
 }

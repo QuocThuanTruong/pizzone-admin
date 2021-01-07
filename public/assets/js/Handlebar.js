@@ -35,3 +35,11 @@ Handlebars.registerHelper('render_pagination', function (category, page, totalPa
 
     return html
 });
+
+Handlebars.registerHelper('standardPrice', function(quantity, price) {
+    price *= quantity
+
+    let priceStr = price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1.').toString()
+
+    return priceStr.substr(0, priceStr.length - 3) + 'đ'
+})

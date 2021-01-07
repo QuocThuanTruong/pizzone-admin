@@ -106,9 +106,6 @@
         });
     },
 
-
-
-
     MainApp.prototype.init = function () {
         this.intSlimscrollmenu();
         this.initSlimscroll();
