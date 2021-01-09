@@ -1,10 +1,13 @@
 function getID(id) {
     let inputID = document.createElement("input")
+
     inputID.id = "id"
     inputID.name = "id"
     inputID.value = id
 
     document.body.appendChild(inputID);
+
+    console.log(document.getElementById('id').value)
 }
 
 function confirmDelete() {
@@ -19,6 +22,24 @@ function confirmDelete() {
     form.appendChild(inputID);
 
     document.body.appendChild(form);
+
+    form.submit()
+}
+
+function confirmDeleteAccount() {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/manage-users";
+
+    const inputID = document.getElementById('id')
+
+    console.log(inputID.value)
+
+    form.appendChild(inputID);
+
+    document.body.appendChild(form);
+
+    console.log(form)
 
     form.submit()
 }
@@ -78,11 +99,66 @@ function gotoPage(categoryId, page) {
     window.location.replace(url)*/
 }
 
+function gotoPageAccount(page) {
+    const categories = [-1, 0, 1]
+    const category = categories[document.getElementById('category').selectedIndex]
+
+    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
+
+    const sortByArr = [1, 2]
+    const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
+
+    let url='/manage-users?category=' + category + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+
+    let keyName = document.getElementById('key-name').value;
+    if (keyName.length > 0) {
+        url += '&key_name=' + keyName;
+    }
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            //render dishes
+            let accountsTemplate = Handlebars.compile($('#main-manage-account-template').html());
+            let accounts = accountsTemplate({accounts: data.accounts})
+            $('#main-manage-account').html(accounts)
+
+            //render pagination-navigation
+            let paginationTemplate = Handlebars.compile($("#pagination-template").html());
+            let pageNavigation = paginationTemplate({page : data.page, totalPage: data.totalPage})
+            $('#pagination').html(pageNavigation)
+
+            //render total result
+            let totalResultTemplate = Handlebars.compile($("#total-result-template").html());
+            let totalResult = totalResultTemplate({totalResult: data.totalResult})
+            $('#total-result').html(totalResult)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
+
+    /*    $.get(url, () => {
+
+        })
+
+        window.location.replace(url)*/
+}
+
 function changeCategory() {
     document.getElementById('key-name').value = '';
 
     gotoPage(0, 1)
 }
+
+function changeCategoryAccount() {
+    document.getElementById('key-name').value = '';
+
+    gotoPageAccount(1)
+}
+
 
 function changeCategoryAdd() {
     const categories = [1, 2, 3]
@@ -187,4 +263,18 @@ function standardPrice(price) {
     let priceStr = price.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1.').toString()
 
     return priceStr.substr(0, priceStr.length - 3) + 'đ'
+}
+
+function lockAccount(user_id) {
+    let url = '/manage-users/lock/' + user_id;
+    $.get(url).done(
+        window.location.replace('/manage-users/detail/' + user_id)
+    )
+}
+
+function unlockAccount(user_id) {
+    let url = '/manage-users/unlock/' + user_id;
+    $.get(url).done(
+        window.location.replace('/manage-users/detail/' + user_id)
+    )
 }
