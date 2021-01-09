@@ -24,8 +24,14 @@ function confirmDelete() {
 }
 
 function gotoPage(categoryId, page) {
-    if (categoryId === 0)
-    categoryId = ""
+    const categories = [1, 2, 3]
+    const category = categories[document.getElementById('category').selectedIndex]
+
+    if (categoryId === 0) {
+        categoryId = category
+    }
+
+    console.log(categoryId)
 
     const totalDishPerPageArr = [1, 2, 3]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
@@ -33,7 +39,12 @@ function gotoPage(categoryId, page) {
     const sortByArr = [1, 2, 3, 4]
     const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
 
-    const url='/manage-dishes?category=' + categoryId + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+    let url='/manage-dishes?category=' + categoryId + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+
+    let keyName = document.getElementById('key-name').value;
+    if (keyName.length > 0) {
+        url += '&key_name=' + keyName;
+    }
 
     $.ajax({
         url: url,
@@ -68,10 +79,9 @@ function gotoPage(categoryId, page) {
 }
 
 function changeCategory() {
-    const categories = [1, 2, 3]
-    const category = categories[document.getElementById('category').selectedIndex]
+    document.getElementById('key-name').value = '';
 
-    gotoPage(category, 1)
+    gotoPage(0, 1)
 }
 
 function changeCategoryAdd() {

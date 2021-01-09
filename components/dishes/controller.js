@@ -40,10 +40,9 @@ exports.index = async (req, res, next) => {
         let isDrinkSelected = false;
         let isSideSelected = false;
 
-        /*console.log("Key name: ", key_name)*/
 
         if (key_name !== undefined) {
-            dishes = await dishModel.searchByKeyName(key_name)
+            dishes = await dishModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
 
             totalResult = dishes.length
         } else {
@@ -124,7 +123,6 @@ exports.pagination = async (req, res, next) => {
     let totalDishPerPage = req.query.total_dish_per_page;
     let sortBy = req.query.sortBy;
 
-    console.log(sortBy)
     /*console.log(req.query)*/
 
     if (categoryId === undefined || categoryId === "")
@@ -147,9 +145,9 @@ exports.pagination = async (req, res, next) => {
     /*console.log("Key name: ", key_name)*/
 
     if (key_name !== undefined) {
-        dishes = await dishModel.searchByKeyName(key_name)
+        dishes = await dishModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
 
-        totalResult = dishes.length
+        totalResult = await dishModel.totalDishByKeyName(key_name)
     } else {
         dishes = await dishModel.listByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
 
@@ -216,8 +214,6 @@ exports.pagination = async (req, res, next) => {
 }
 
 exports.delete = async (req, res, next) => {
-    console.log(req.body['id'])
-
     const _ = await dishModel.delete(req.body['id'])
 
     this.index(req, res, next)
@@ -280,8 +276,6 @@ exports.update = async (req, res, next) => {
         isDrinkSelected : isDrinkSelected,
         isSideSelected : isSideSelected,
     }
-
-    console.log(dataContext)
 
     res.render('.././components/dishes/views/update', dataContext);
 }

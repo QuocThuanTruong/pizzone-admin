@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const userController = require('./controller');
-
+const authController = require('../auth/controller')
 /* GET home page. */
-router.get('/', userController.index);
+router.get('/', authController.isLogin, userController.index);
 
-router.get('/detail/:id', userController.detail);
+router.get('/detail/:id', authController.isLogin, userController.detail);
 
 module.exports = router;

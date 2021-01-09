@@ -199,9 +199,35 @@ exports.totalDishByCategory = async (categoryId) => {
     return queryResult[0].total
 }
 
-exports.searchByKeyName = async (keyName) => {
-    return await execQuery('SELECT * FROM dishes WHERE name LIKE \'%'+keyName+'%\' AND is_active = 1')
+exports.searchByKeyName = async (keyName, page, totalDishPerPage, sortBy) => {
+    let sort = '';
+    switch (sortBy) {
+        case '1':
+            sort = 'created_date';
+            break;
+        case '2':
+            sort = 'name';
+            break;
+        case '3':
+            sort = 'price DESC';
+            break;
+        case '4':
+            sort = 'price ASC';
+            break;
+    }
+
+    let query = 'SELECT * FROM dishes WHERE MATCH(name) AGAINST(\''+keyName+'\') AND is_active = 1  ORDER BY ' + sort + ' LIMIT ' +totalDishPerPage + ' OFFSET '+((page - 1) * totalDishPerPage)
+    return await execQuery(query)
 }
+
+exports.totalDishByKeyName = async (keyName) => {
+    let query = 'SELECT COUNT(dish_id) as total FROM dishes WHERE MATCH(name) AGAINST(\''+keyName+'\') AND is_active = 1';
+
+    let result = await execQuery(query);
+
+    return result[0].total
+}
+
 
 exports.delete = async (id) => {
     const _ = await execQuery('UPDATE dishes SET is_active = 0 WHERE dish_id = '+id)
@@ -218,7 +244,7 @@ exports.insert = async (dish) => {
     await execQuery('INSERT INTO dishes(dish_id, name, category, subcategory, avatar, igredients, detail_description, price, discount, rate, total_reviews, status, is_active) VALUES ('+dish_id+',\''+dish.name+'\','+dish.category+','+dish.subcategory+',\''+dish.avatar+'\',\''+dish.igredients+'\',\''+dish.detail_description+'\','+dish.price+','+dish.discount+', 0, 0, 1, 1)')
 
     for (let i = 0; i < dish.sizeNames.length; i++) {
-        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price, is_active) VALUES ('+dish_id+',\''+dish.sizeNames[i]+'\','+dish.sizePrice[i]+', 1)')
+        await execQuery('INSERT INTO dishes_sizes(size_id, dish, name, extra_price, is_active) VALUES ('+ (i + 1) + ', ' +dish_id+',\''+dish.sizeNames[i]+'\','+dish.sizePrice[i]+', 1)')
     }
 
     let item_no = 0
@@ -234,7 +260,7 @@ exports.update = async (dish) => {
     await execQuery('DELETE FROM dishes_sizes WHERE dish = '+dish.dish_id)
 
     for (let i = 0; i < dish.sizeNames.length; i++) {
-        await execQuery('INSERT INTO dishes_sizes(dish, name, extra_price, is_active) VALUES ('+dish.dish_id+',\''+dish.sizeNames[i]+'\','+dish.sizePrice[i]+', 1)')
+        await execQuery('INSERT INTO dishes_sizes(size_id, dish, name, extra_price, is_active) VALUES ('+ (i + 1) + ', ' +dish.dish_id+',\''+dish.sizeNames[i]+'\','+dish.sizePrice[i]+', 1)')
     }
 
     await execQuery('DELETE FROM dishes_images WHERE dish = '+dish.dish_id)
