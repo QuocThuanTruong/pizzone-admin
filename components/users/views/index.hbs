@@ -78,17 +78,17 @@
                                         <p class="found-search-item col-form-label">Shown items</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="total_dish_per_page" onchange="gotoPageAccount(1)">
-                                                {{#if totalDishPerPageOption1Selected}}
+                                                {{#if totalDishPerPageOption.option1}}
                                                     <option selected>1</option>
                                                 {{else}}
                                                     <option>1</option>
                                                 {{/if}}
-                                                {{#if totalDishPerPageOption2Selected}}
+                                                {{#if totalDishPerPageOption.option2}}
                                                     <option selected>2</option>
                                                 {{else}}
                                                     <option>2</option>
                                                 {{/if}}
-                                                {{#if totalDishPerPageOption3Selected}}
+                                                {{#if totalDishPerPageOption.option3}}
                                                     <option selected>3</option>
                                                 {{else}}
                                                     <option>3</option>
@@ -115,7 +115,7 @@
                                     <tbody id="main-manage-account">
                                     {{#each accounts}}
                                         <tr>
-                                            <th scope="row">1</th>
+                                            <th scope="row">{{user_id}}</th>
                                             <td>{{name}}</td>
                                             <td>{{email}}</td>
                                             <td>{{phone}}</td>
@@ -143,7 +143,7 @@
                                     <script type="text/x-handlebars-template" id="main-manage-account-template">
                                         \{{#each accounts}}
                                         <tr>
-                                            <th scope="row">1</th>
+                                            <th scope="row">\{{user_id}}</th>
                                             <td>\{{name}}</td>
                                             <td>\{{email}}</td>
                                             <td>\{{phone}}</td>

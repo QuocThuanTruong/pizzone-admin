@@ -44,6 +44,24 @@ function confirmDeleteAccount() {
     form.submit()
 }
 
+function confirmDeleteOrder() {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/manage-orders";
+
+    const inputID = document.getElementById('id')
+
+    console.log(inputID.value)
+
+    form.appendChild(inputID);
+
+    document.body.appendChild(form);
+
+    console.log(form)
+
+    form.submit()
+}
+
 function gotoPage(categoryId, page) {
     const categories = [1, 2, 3]
     const category = categories[document.getElementById('category').selectedIndex]
@@ -91,12 +109,6 @@ function gotoPage(categoryId, page) {
             console.log(err)
         }
     })
-
-/*    $.get(url, () => {
-
-    })
-
-    window.location.replace(url)*/
 }
 
 function gotoPageAccount(page) {
@@ -139,12 +151,48 @@ function gotoPageAccount(page) {
             console.log(err)
         }
     })
+}
 
-    /*    $.get(url, () => {
+function gotoPageOrder(page) {
+    const categories = [0, 1, 2, 3]
+    const category = categories[document.getElementById('category').selectedIndex]
 
-        })
+    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
-        window.location.replace(url)*/
+    const sortByArr = [1, 2]
+    const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
+
+    let url='/manage-orders?category=' + category + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+
+    let keyName = document.getElementById('key-name').value;
+    if (keyName.length > 0) {
+        url += '&key_name=' + keyName;
+    }
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            //render dishes
+            let ordersTemplate = Handlebars.compile($('#main-manage-order-template').html());
+            let orders = ordersTemplate({orders: data.orders})
+            $('#main-manage-order').html(orders)
+
+            //render pagination-navigation
+            let paginationTemplate = Handlebars.compile($("#pagination-template").html());
+            let pageNavigation = paginationTemplate({page : data.page, totalPage: data.totalPage})
+            $('#pagination').html(pageNavigation)
+
+            //render total result
+            let totalResultTemplate = Handlebars.compile($("#total-result-template").html());
+            let totalResult = totalResultTemplate({totalResult: data.totalResult})
+            $('#total-result').html(totalResult)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
 }
 
 function changeCategory() {
@@ -159,6 +207,11 @@ function changeCategoryAccount() {
     gotoPageAccount(1)
 }
 
+function changeCategoryOrder() {
+    document.getElementById('key-name').value = '';
+
+    gotoPageOrder(1)
+}
 
 function changeCategoryAdd() {
     const categories = [1, 2, 3]
@@ -172,18 +225,6 @@ function reloadPage(category) {
         category = ""
 
     const url='/manage-dishes/add?category='+category;
-
-    /*$.ajax({
-        url: url,
-        type: "GET",
-        success: function (data) {
-            console.log(data)
-            $("#pagination").html(data)
-        },
-        error: function (err) {
-            conole.log(err)
-        }
-    })*/
 
     $.get(url, () => {
 
@@ -276,5 +317,13 @@ function unlockAccount(user_id) {
     let url = '/manage-users/unlock/' + user_id;
     $.get(url).done(
         window.location.replace('/manage-users/detail/' + user_id)
+    )
+}
+
+function updateOrder(order_id) {
+    let status = document.getElementById('sort-by').selectedIndex;
+    let url = '/manage-orders/update/' + order_id + '?status=' + status;
+    $.get(url).done(
+        window.location.replace('/manage-orders/update/' + order_id)
     )
 }
