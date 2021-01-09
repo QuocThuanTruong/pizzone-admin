@@ -1,5 +1,4 @@
 <!-- App js -->
-<script src="/assets/js/app.js"></script>
 
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
@@ -10,6 +9,9 @@
 <script src="/assets/js/ajax.js"></script>
 <script src="/assets/js/Handlebar.js"></script>
 
+<script src="/assets/pages/form-advanced.js"></script>
+<script src="/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
 <!-- Image picker -->
 <script src="/assets/js/imgpicker.js"></script>
 
@@ -18,6 +20,7 @@
 
 <!-- Dropzone js -->
 <script src="/plugins/dropzone/dist/dropzone.js"></script>
+
 
 <!-- App js -->
 <script src="/assets/js/app.js"></script>
@@ -28,9 +31,37 @@
 
 <script src="/assets/pages/dashboard.init.js"></script>
 
+<script src="/assets/js/chart.js"></script>
+
+
+<script type="text/javascript">
+    (function($) {
+        jQuery('#datepicker').datepicker();
+        jQuery('#datepicker-autoclose').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        jQuery('#datepicker-inline').datepicker();
+        jQuery('#datepicker-multiple-date').datepicker({
+            format: "mm/dd/yyyy",
+            clearBtn: true,
+            multidate: true,
+            multidateSeparator: ","
+        });
+        jQuery('#date-range').datepicker({
+            toggleActive: true
+        });
+    })(jQuery);
+</script>
+
+
+
+
 <script>
     $(document).ready(function() {
         $('form').parsley();
     });
 </script>
+
+
 
