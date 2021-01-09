@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const adminController = require('./controller');
+const authController = require('../auth/controller')
 const api = require('./api')
 
 /* GET home page. */
-router.get('/', adminController.index);
+router.get('/', authController.isLogin, adminController.index);
 
-router.get('/profile', adminController.profile);
+router.get('/profile', authController.isLogin, adminController.profile);
 
 module.exports = router;

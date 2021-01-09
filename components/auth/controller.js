@@ -1,6 +1,5 @@
 
 exports.signIn = async (req, res, next) => {
-
     res.render('.././components/auth/views/signIn', {isLogin: false});
 }
 
@@ -14,3 +13,10 @@ exports.logout = (req, res, next) => {
     res.redirect('/');
 }
 
+exports.isLogin = async (req, res, next) => {
+    if (req.user) {
+        next()
+    } else {
+        res.redirect('/')
+    }
+}

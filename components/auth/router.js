@@ -7,7 +7,7 @@ const api = require('../admin/api')
 /* GET home page. */
 router.get('/', authController.signIn)
 
-router.get('/recover-password', authController.recoverPassword);
+router.get('/recover-password',  authController.isLogin, authController.recoverPassword);
 
 router.post('/login',
     passport.authenticate('local', {
@@ -16,7 +16,7 @@ router.post('/login',
         failureFlash: true })
 );
 
-router.get('/logout', authController.logout)
+router.get('/logout', authController.isLogin, authController.logout)
 
 router.get('/api/is-exist/:username', api.isExistsAPI)
 

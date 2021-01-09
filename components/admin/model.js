@@ -23,13 +23,10 @@ function execQuery(queryString) {
 exports.getUserByUsernameAndPassword = async (username, password) => {
     const user = await execQuery('SELECT * FROM user WHERE username = \''+username+'\' and is_active = 1 and role = 1')
 
-
     if (user[0]) {
         let equal = await bcrypt.compareSync(password.toString(), user[0].password.toString());
 
         if (equal) {
-            console.log(user[0].phone);
-
             return user[0]
         }
     }
@@ -40,7 +37,6 @@ exports.getUserByUsernameAndPassword = async (username, password) => {
 exports.getUserById = async (id) => {
     const users =  await execQuery('SELECT * FROM user WHERE user_id = '+ id + ' and is_active = 1 and role = 1')
     let user = users[0];
-
 
     return user;
 }
