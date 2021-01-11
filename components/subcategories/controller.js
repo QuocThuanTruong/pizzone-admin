@@ -211,8 +211,6 @@ exports.confirmUpdate = async (req, res, next) => {
         is_active: req.body['status']
     }
 
-    console.log(subcategory)
-
     await subcategoryModel.updateSubcategory(subcategory)
 
     res.redirect('/manage-categories/dishes-subcategories/')
