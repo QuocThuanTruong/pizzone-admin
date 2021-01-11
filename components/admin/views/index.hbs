@@ -114,19 +114,13 @@
                     <div class="card m-b-30">
                         <div class="card-body">
                             <h4 class="mt-0 header-title mb-4">DOANH THU THEO QUÝ</h4>
-
                             <div id="quarterRevenueChart" class="morris-charts morris-chart-height"></div>
-
                         </div>
                     </div>
                 </div>
-
-
                 <!-- end col -->
             </div>
             <!-- end row -->
-
-
             <!-- START ROW -->
             <div class="row">
                 <div class="col-xl-12">
@@ -139,48 +133,41 @@
                                     <tr class="bg-primary">
                                         <th scope="col">Name</th>
                                         <th scope="col">Category</th>
+                                        <th scope="col">Subcategory</th>
                                         <th scope="col">Price</th>
                                         <th scope="col">Quantity</th>
-
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <div>
-                                                <img src="/assets/images/users/user-2.jpg" alt="" class="thumb-md rounded-circle mr-2"> Pizza hải sản
-                                            </div>
-                                        </td>
-                                        <td>Pizza</td>
-
-                                        <td>123.000 đ</td>
-                                        <td>200 sold</td>
-
-
-                                    </tr>
-
+                                    {{#each topDishes}}
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <img src="{{avatar}}" alt="" class="thumb-md rounded-circle mr-2">
+                                                    {{name}}
+                                                </div>
+                                            </td>
+                                            <td>{{category.name}}</td>
+                                            <td>{{subcategory.name}}</td>
+                                            <td>{{standardPrice 1 price}}</td>
+                                            <td>{{order.totalQuantity}}</td>
+                                        </tr>
+                                    {{/each}}
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
             <!-- END ROW -->
-
         </div>
         <!-- container-fluid -->
-
     </div>
     <!-- content -->
-
-
     <footer class="footer">
         © 2019 Stexo <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
     </footer>
-
 </div>
 <!-- ============================================================== -->
 <!-- End Right content here -->

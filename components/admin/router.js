@@ -8,5 +8,6 @@ const api = require('./api')
 router.get('/', authController.isLogin, adminController.index);
 
 router.get('/profile', authController.isLogin, adminController.profile);
+router.post('/profile', authController.isLogin, adminController.updateProfile);
 
 module.exports = router;
