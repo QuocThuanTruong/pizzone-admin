@@ -52,6 +52,12 @@ exports.getAllCategory = async (page, totalDishPerPage, sortBy) => {
     return fullCategoryInfo(categories)
 }
 
+exports.getAllCategory = async () => {
+    let categories = await execQuery('SELECT * from dishes_category where is_active = 1')
+
+    return categories
+}
+
 exports.totalCategory = async () => {
     let query = 'SELECT COUNT(category_id) as total FROM dishes_category where is_active <> -1';
 
@@ -99,19 +105,19 @@ exports.getMaxCategoryId = async () => {
 }
 
 exports.addNewCategory = async (categoryName) => {
-    let category_id = await this.getMaxCategoryId() + 1;
+    let categoryId = await this.getMaxCategoryId() + 1;
 
     let exists = await this.isExistsCategory(categoryName)
 
     if (exists) {
         await execQuery('UPDATE dishes_category set is_active = 1 where name = \'' + categoryName + '\'')
     } else {
-        await execQuery('INSERT INTO dishes_category (category_id, name, is_active) values(' + category_id + ', \'' + categoryName + '\', 1)');
+        await execQuery('INSERT INTO dishes_category (category_id, name, is_active) values(' + categoryId + ', \'' + categoryName + '\', 1)');
     }
 }
 
 exports.isExistsCategory = async (categoryName) => {
-    let result = await execQuery('SELECT EXISTS(SELECT * FROM dishes_category WHERE name = \''+categoryName+'\' and is_active = 1) as e')
+    let result = await execQuery('SELECT EXISTS(SELECT * FROM dishes_category WHERE name = \''+categoryName+'\') as e')
 
     return result[0].e;
 }

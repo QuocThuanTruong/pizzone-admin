@@ -1,82 +1,33 @@
-function getID(id) {
+function getID(id, parentId) {
     let inputID = document.createElement("input")
+    let inputParentID = document.createElement("input")
 
     inputID.id = "id"
     inputID.name = "id"
     inputID.value = id
+    inputID.type = "hidden"
+
+    inputParentID.id = "parent-id"
+    inputParentID.name = "parent-id"
+    inputParentID.value = parentId
+    inputParentID.type = "hidden"
 
     document.body.appendChild(inputID);
-
-    console.log(document.getElementById('id').value)
+    document.body.appendChild(inputParentID);
 }
 
-function confirmDelete() {
+function confirmDelete(urlDelete) {
     const form = document.createElement("form");
     form.method = "POST";
-    form.action = "/manage-dishes";
+    form.action = urlDelete;
 
     const inputID = document.getElementById('id')
-
-    console.log(inputID.value)
-
-    form.appendChild(inputID);
-
-    document.body.appendChild(form);
-
-    form.submit()
-}
-
-function confirmDeleteAccount() {
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/manage-users";
-
-    const inputID = document.getElementById('id')
-
-    console.log(inputID.value)
+    const inputParentID = document.getElementById('parent-id')
 
     form.appendChild(inputID);
+    form.appendChild(inputParentID);
 
     document.body.appendChild(form);
-
-    console.log(form)
-
-    form.submit()
-}
-
-function confirmDeleteOrder() {
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/manage-orders";
-
-    const inputID = document.getElementById('id')
-
-    console.log(inputID.value)
-
-    form.appendChild(inputID);
-
-    document.body.appendChild(form);
-
-    console.log(form)
-
-    form.submit()
-}
-
-
-function confirmDeleteCategory() {
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/manage-categories/dishes-categories";
-
-    const inputID = document.getElementById('id')
-
-    console.log(inputID.value)
-
-    form.appendChild(inputID);
-
-    document.body.appendChild(form);
-
-    console.log(form)
 
     form.submit()
 }
@@ -238,6 +189,50 @@ function gotoPageCategory(page) {
             let categoriesTemplate = Handlebars.compile($('#main-manage-category-template').html());
             let categories = categoriesTemplate({categories: data.categories})
             $('#main-manage-category').html(categories)
+
+            //render pagination-navigation
+            let paginationTemplate = Handlebars.compile($("#pagination-template").html());
+            let pageNavigation = paginationTemplate({page : data.page, totalPage: data.totalPage})
+            $('#pagination').html(pageNavigation)
+
+            //render total result
+            let totalResultTemplate = Handlebars.compile($("#total-result-template").html());
+            let totalResult = totalResultTemplate({totalResult: data.totalResult})
+            $('#total-result').html(totalResult)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
+}
+
+function gotoPageSubcategory(page) {
+    const category =  $('#category').find(":selected").text();
+    console.log(category)
+
+    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
+
+    const sortByArr = [1, 2]
+    const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
+
+    let url='/manage-categories/dishes-subcategories?category=' + category + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+
+    let keyName = document.getElementById('key-name').value;
+    if (keyName.length > 0) {
+        url += '&key_name=' + keyName;
+    }
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            //render dishes
+            let subcategoryTemplate = Handlebars.compile($('#main-manage-subcategory-template').html());
+            let subcategories = subcategoryTemplate({subcategories: data.subcategories})
+            $('#main-manage-subcategory').html(subcategories)
+
+            console.log(subcategories)
 
             //render pagination-navigation
             let paginationTemplate = Handlebars.compile($("#pagination-template").html());
