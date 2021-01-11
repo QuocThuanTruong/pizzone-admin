@@ -1,6 +1,10 @@
 
 exports.signIn = async (req, res, next) => {
-    res.render('.././components/auth/views/signIn', {isLogin: false});
+    if (!req.user) {
+        res.render('.././components/auth/views/signIn', {isLogin: false});
+    } else {
+        res.redirect('/dashboard')
+    }
 }
 
 exports.recoverPassword = async (req, res, next) => {

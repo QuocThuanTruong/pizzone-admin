@@ -28,9 +28,9 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="invoice-title">
-                                        <h4 class="float-right"><span class="badge badge-success">ĐÃ GIAO HÀNG</span></h4>
+                                        <h4 class="float-right"><span class="badge {{orderStatus order.status}}">{{order.status_name_uppercase}}</span></h4>
                                         <h3 class="m-t-0">
-                                            <strong>Quốc Thuận Trương</strong>
+                                            <strong>{{order.user.name}}</strong>
                                         </h3>
                                     </div>
                                     <hr>
@@ -38,7 +38,7 @@
                                         <div class="col-4">
                                             <address>
                                                 <strong>Địa chỉ giao hàng:</strong><br>
-                                                12344321, abc<br>
+                                                {{order.user.address}}<br>
                                             </address>
                                         </div>
 
@@ -50,8 +50,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             <div class="row">
@@ -73,56 +71,29 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <!-- foreach ($order->lineItems as $line) or some such thing here -->
-                                                    <tr>
-                                                        <td>BS-200</td>
-                                                        <td class="text-center">$10.99</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-right">$10.99</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BS-400</td>
-                                                        <td class="text-center">$20.00</td>
-                                                        <td class="text-center">3</td>
-                                                        <td class="text-right">$60.00</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BS-1000</td>
-                                                        <td class="text-center">$600.00</td>
-                                                        <td class="text-center">1</td>
-                                                        <td class="text-right">$600.00</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="thick-line"></td>
-                                                        <td class="thick-line"></td>
-                                                        <td class="thick-line text-center">
-                                                            <strong>Tổng tiền món ăn</strong></td>
-                                                        <td class="thick-line text-right">$670.99</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="no-line"></td>
-                                                        <td class="no-line"></td>
-                                                        <td class="no-line text-center">
-                                                            <strong>Phí vận chuyển</strong></td>
-                                                        <td class="no-line text-right">$15</td>
-                                                    </tr>
+                                                    {{#each order.orderDetail}}
+                                                        <tr>
+                                                            <td>{{dishDetail.name}}</td>
+                                                            <td class="text-center">{{standardPrice 1 price}}</td>
+                                                            <td class="text-center">{{quantity}}</td>
+                                                            <td class="text-right">{{standardPrice quantity price}}</td>
+                                                        </tr>
+                                                    {{/each}}
+
                                                     <tr>
                                                         <td class="no-line"></td>
                                                         <td class="no-line"></td>
                                                         <td class="no-line text-center ">
                                                             <h5 class="m-0">TỔNG</h5></td>
-                                                        <td class="no-line text-right"><h4 class="m-0">$685.99</h4></td>
+                                                        <td class="no-line text-right"><h4 class="m-0">{{standardPrice 1 order.total_price}}</h4></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div> <!-- end row -->
-
 
                             <div class="row">
                                 <div class="col-12">
@@ -131,9 +102,6 @@
                                             <h3 class="panel-title font-20"><strong>Cập nhật trạng thái đơn hàng</strong></h3>
                                             <hr>
                                         </div>
-
-
-
                                     </div>
 
                                     <div class="row">
@@ -141,43 +109,50 @@
                                             <form>
                                                 <div class="form-group">
                                                     <div>
-                                                        <select class="form-control" id="sort-by" onchange="gotoPage({{category}}, 1)">
-                                                            <option>Đang chuẩn bị</option>
-                                                            <option>Đang giao</option>
-                                                            <option>Đã giao hàng</option>
-                                                            <option>Đã hủy</option>
+                                                        <select class="form-control" id="sort-by">
+                                                            {{#if statusOption.option1}}
+                                                                <option selected>Đang chuẩn bị</option>
+                                                            {{else}}
+                                                                <option>Đang chuẩn bị</option>
+                                                            {{/if}}
+
+                                                            {{#if statusOption.option2}}
+                                                                <option selected>Đang giao</option>
+                                                            {{else}}
+                                                                <option>Đang giao</option>
+                                                            {{/if}}
+
+                                                            {{#if statusOption.option3}}
+                                                                <option selected>Đã giao hàng</option>
+                                                            {{else}}
+                                                                <option>Đã giao hàng</option>
+                                                            {{/if}}
+
+                                                            {{#if statusOption.option4}}
+                                                                <option selected>Đã hủy</option>
+                                                            {{else}}
+                                                                <option>Đã hủy</option>
+                                                            {{/if}}
                                                         </select>
 
-
-
-                                                        <button type="submit" class="btn btn-success waves-effect waves-light m-t-10">
+                                                        <button onclick="updateOrder({{order.order_id}})" class="btn btn-success waves-effect waves-light m-t-10">
                                                             Cập nhật
                                                         </button>
-
-
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
-
                         </div>
                     </div>
                 </div> <!-- end col -->
             </div> <!-- end row -->
-
-
         </div>
         <!-- container-fluid -->
-
     </div>
     <!-- content -->
-
-
 </div>
 <!-- ============================================================== -->
 <!-- End Right content here -->

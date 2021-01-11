@@ -26,10 +26,10 @@
                         <div class="card-body">
                             <div class="row p-3">
                                 <div class="col-lg-3">
-                                    <form role="search" class="email-inbox" method="GET" action="/manage-orders">
+                                    <form class="email-inbox" onsubmit="return false">
                                         <div class="form-group mb-0">
-                                            <input type="text" class="form-control rounded" placeholder="Search order.." name="key_name">
-                                            <button type="submit"><i class="fa fa-search"></i></button>
+                                            <input type="text" class="form-control rounded" placeholder="Search order.." name="key_name" id="key-name">
+                                            <button onclick="gotoPageOrder(1)"><i class="fa fa-search"></i></button>
                                         </div>
                                     </form>
 
@@ -49,7 +49,7 @@
 
                                         <p class="found-search-item col-form-label">Loại đơn</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="category" onchange="changeCategory()">
+                                            <select class="form-control" id="category" onchange="changeCategoryOrder()">
                                                 {{#if isPreparing}}
                                                     <option selected>Đang chuẩn bị</option>
                                                 {{else}}
@@ -76,34 +76,32 @@
 
                                         <p class="found-search-item col-form-label" >Sắp xếp</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="sort-by" onchange="gotoPage({{category}}, 1)">
+                                            <select class="form-control" id="sort-by" onchange="gotoPageOrder(1)">
                                                 <option>Ngày</option>
-                                                <option>Tên</option>
                                                 <option>Giá tiền</option>
                                             </select>
                                         </div>
 
                                         <p class="found-search-item col-form-label">Shown items</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="total_dish_per_page" onchange="gotoPage({{category}}, 1)">
-                                                {{#if totalDishPerPageOption1Selected}}
+                                            <select class="form-control" id="total_dish_per_page" onchange="gotoPageOrder(1)">
+                                                {{#if totalDishPerPageOption.option1}}
                                                     <option selected>1</option>
                                                 {{else}}
                                                     <option>1</option>
                                                 {{/if}}
-                                                {{#if totalDishPerPageOption2Selected}}
+                                                {{#if totalDishPerPageOption.option2}}
                                                     <option selected>2</option>
                                                 {{else}}
                                                     <option>2</option>
                                                 {{/if}}
-                                                {{#if totalDishPerPageOption3Selected}}
+                                                {{#if totalDishPerPageOption.option3}}
                                                     <option selected>3</option>
                                                 {{else}}
                                                     <option>3</option>
                                                 {{/if}}
                                             </select>
                                         </div>
-
                                     </div>
                                 </div>
 
@@ -121,33 +119,55 @@
                                         <th>Action</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="main-manage-order">
+                                    {{#each orders}}
+                                        <tr>
+                                            <th scope="row">{{order_id}}</th>
+                                            <td>{{user.name}}</td>
+                                            <td>{{user.phone}}</td>
+                                            <td>{{standardPrice 1 total_price}}</td>
+                                            <!-- binding bage info -->
+                                            <td><span class="badge {{orderStatus status}}">{{status_name}}</span></td>
 
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>jadsklfjaskdlfjklasdjflksadjfkl</td>
-                                        <td>abc@gmail.com</td>
-                                        <td>012345567</td>
-                                        <!-- binding bage info -->
-                                        <td><span class="badge badge-danger">Chuẩn bị</span></td>
-<!--                                        <td><span class="badge badge-warning">Đang giao</span></td>-->
-<!--                                        <td><span class="badge badge-success">Đã giao</span></td>-->
-                                        <td>
-                                            <div class="btn-toolbar form-group mb-0">
-                                                <div class="">
-                                                    <a href="/manage-orders/update/1" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
-                                                    <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{dish_id}}')">
-                                                        <i class="far fa-trash-alt"></i>
-                                                    </button>
+                                            <td>
+                                                <div class="btn-toolbar form-group mb-0">
+                                                    <div class="">
+                                                        <a href="/manage-orders/update/{{order_id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
+                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('{{order_id}}')">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
+                                            </td>
+                                        </tr>
+                                    {{/each}}
                                     </tbody>
+                                    <script type="text/x-handlebars-template" id="main-manage-order-template">
+                                        \{{#each orders}}
+                                        <tr>
+                                            <th scope="row">\{{order_id}}</th>
+                                            <td>\{{user.name}}</td>
+                                            <td>\{{user.phone}}</td>
+                                            <td>\{{standardPrice 1 total_price}}</td>
+                                            <!-- binding bage info -->
+                                           <td><span class="badge \{{orderStatus status}}">\{{status_name}}</span></td>
+                                            <td>
+                                                <div class="btn-toolbar form-group mb-0">
+                                                    <div class="">
+                                                        <a href="/manage-orders/update/\{{order_id}}" role="button" class="btn btn-success waves-effect waves-light m-r-5"><i class="far fa-edit"></i></a>
+                                                        <button type="button" class="btn btn-danger waves-effect waves-light m-r-5 delete-modal-dialog" data-toggle="modal" data-target="#alertDeleteModal" onclick="getID('\{{order_id}}')">
+                                                            <i class="far fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    \{{/each}}
+                                    </script>
+
                                 </table>
 
-                                {{> deleteWarningModal}}
+                                {{> deleteWarningOrder}}
                             </div>
                         </div>
                     </div>
@@ -155,10 +175,10 @@
             </div>
 
             <div id="pagination">
-                {{{render_pagination category page totalPage}}}
+                {{{render_pagination_order page totalPage}}}
             </div>
             <script type="text/x-handlebars-template" id="pagination-template">
-                \{{{render_pagination category page totalPage}}}
+                \{{{render_pagination_order page totalPage}}}
             </script>
         </div>
         <!-- container-fluid -->

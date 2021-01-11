@@ -28,37 +28,34 @@
                             <div class="locked-bagde float-right m-r-20"><h5><span class="badge badge-success">ACTIVE</span></h5></div>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-categories/dishes-subcategories/update/{{subcategory.subcategory_id}}?parent={{subcategory.category}}">
 
                                 <div class="form-group">
                                     <label>Thể loại</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category" onchange="changeCategory({{dish_id}})">
-                                            <option selected>Pizza</option>
-                                            <option >Drink</option>
-                                            <option >Sides</option>
+                                        <select class="form-control" id="category" name="category">
+                                            {{#each categories}}
+                                                <option {{selected_category subcategory}} value="{{category_id}}">{{name}}</option>
+                                            {{/each}}
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Tiểu thể loại</label>
-                                    <input type="text" class="form-control" required placeholder="Tên tiểu thể loại" name="subcategory" id="subcategory"/>
+                                    <input type="text" class="form-control" required placeholder="Tên tiểu thể loại" name="subcategory" id="subcategory" value="{{subcategory.name}}"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <div >
-                                        <select class="form-control" id="status" name="status" onchange="changeCategory({{dish_id}})">
-                                            {{#if isPizzaSelected}}
-                                                <option selected>Active</option>
+                                        <select class="form-control" id="status" name="status">
+                                            {{#if subcategory.isActive}}
+                                                <option selected value="1">Active</option>
+                                                <option value="0">Not active</option>
                                             {{else}}
-                                                <option>Active</option>
-                                            {{/if}}
-                                            {{#if isDrinkSelected}}
-                                                <option selected>Not active</option>
-                                            {{else}}
-                                                <option>Not active</option>
+                                                <option value="1">Active</option>
+                                                <option selected value="0">Not active</option>
                                             {{/if}}
                                         </select>
                                     </div>
@@ -70,8 +67,8 @@
                                             Cập nhật
                                         </button>
 
-                                        <a href="/manage-dishes">
-                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        <a href="/manage-categories/dishes-subcategories">
+                                            <button type="button" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
                                         </a>

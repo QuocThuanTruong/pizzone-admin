@@ -6,7 +6,6 @@ exports.index = async (req, res, next) => {
 
         let categoryId = req.query.category;
         let currentPage = req.query.page;
-        let totalDishPerPage = req.query.total_dish_per_page;
 
         let sortBy = '1';
 
@@ -16,12 +15,37 @@ exports.index = async (req, res, next) => {
         if (currentPage === undefined)
             currentPage = '1';
 
-        if (totalDishPerPage === undefined)
-            totalDishPerPage = '1';
+        if (req.session.totalUserPerPage === undefined) {
+            req.session.totalUserPerPage = 1
+        }
+
+        let totalDishPerPage = parseInt(req.session.totalUserPerPage)
+
+        let totalDishPerPageOption = {
+            option1: false,
+            option2: false,
+            option3: false,
+        }
+        switch (totalDishPerPage) {
+            case 1 :
+                totalDishPerPageOption.option1 = true;
+                totalDishPerPageOption.option2 = false;
+                totalDishPerPageOption.option3 = false;
+                break;
+            case 2 :
+                totalDishPerPageOption.option1 = false;
+                totalDishPerPageOption.option2 = true;
+                totalDishPerPageOption.option3 = false;
+                break;
+            case 3 :
+                totalDishPerPageOption.option1 = false;
+                totalDishPerPageOption.option2 = false;
+                totalDishPerPageOption.option3 = true;
+                break;
+        }
 
         let accounts = await userModel.getAllAccount(currentPage, totalDishPerPage, sortBy);
         let totalResult = await userModel.totalAccount();
-        let totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
         if (key_name !== undefined) {
             accounts = await userModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
@@ -31,14 +55,14 @@ exports.index = async (req, res, next) => {
             accounts = await userModel.getAccountByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
 
             totalResult = await userModel.totalAccountByCategory(categoryId);
-
-            totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
         }
 
+        let  totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
         const dataContext = {
             totalResult: totalResult,
             accounts: accounts,
+            totalDishPerPageOption: totalDishPerPageOption,
             totalPage: totalPage,
             page: currentPage,
             category: categoryId,
@@ -66,11 +90,13 @@ exports.pagination = async (req, res, next) => {
         currentPage = '1';
 
     if (totalDishPerPage === undefined)
-        totalDishPerPage = '1';
+        totalDishPerPage = parseInt(req.session.totalUserPerPage);
+    else {
+        req.session.totalUserPerPage = parseInt(totalDishPerPage);
+    }
 
     let accounts = await userModel.getAllAccount(currentPage, totalDishPerPage, sortBy);
     let totalResult = await userModel.totalAccount();
-    let totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
     if (key_name !== undefined) {
         accounts = await userModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
@@ -81,8 +107,9 @@ exports.pagination = async (req, res, next) => {
 
         totalResult = await userModel.totalAccountByCategory(categoryId);
 
-        totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
     }
+
+    let  totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
     const dataContext = {
         totalResult: totalResult,

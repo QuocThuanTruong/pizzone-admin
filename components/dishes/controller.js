@@ -19,7 +19,6 @@ exports.index = async (req, res, next) => {
 
         let categoryId = req.query.category;
         let currentPage = req.query.page;
-        let totalDishPerPage = req.query.total_dish_per_page;
 
         let sortBy = '1';
 
@@ -29,8 +28,34 @@ exports.index = async (req, res, next) => {
         if (currentPage === undefined)
             currentPage = '1';
 
-        if (totalDishPerPage === undefined)
-            totalDishPerPage = '1';
+        if (req.session.totalDishPerPage === undefined) {
+            req.session.totalDishPerPage = 1
+        }
+
+        let totalDishPerPage = parseInt(req.session.totalDishPerPage)
+
+        let totalDishPerPageOption = {
+            option1: false,
+            option2: false,
+            option3: false,
+        }
+        switch (totalDishPerPage) {
+            case 1 :
+                totalDishPerPageOption.option1 = true;
+                totalDishPerPageOption.option2 = false;
+                totalDishPerPageOption.option3 = false;
+                break;
+            case 2 :
+                totalDishPerPageOption.option1 = false;
+                totalDishPerPageOption.option2 = true;
+                totalDishPerPageOption.option3 = false;
+                break;
+            case 3 :
+                totalDishPerPageOption.option1 = false;
+                totalDishPerPageOption.option2 = false;
+                totalDishPerPageOption.option3 = true;
+                break;
+        }
 
         let totalPage;
         let dishes;
@@ -67,23 +92,6 @@ exports.index = async (req, res, next) => {
             totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
         }
 
-        let totalDishPerPageOption1Selected = false;
-        let totalDishPerPageOption2Selected = false;
-        let totalDishPerPageOption3Selected = false;
-
-        switch (totalDishPerPage) {
-            case '1':
-                totalDishPerPageOption1Selected = true;
-                break;
-            case '2':
-                totalDishPerPageOption2Selected = true;
-                break;
-            case '3':
-                totalDishPerPageOption3Selected = true;
-                break;
-
-        }
-
         for (let dish of dishes) {
             dish.categoryName = await dishModel.getCategoryName(dish.category)
             dish.subCategoryName = await dishModel.getSubCategoryName(dish.subcategory)
@@ -96,9 +104,7 @@ exports.index = async (req, res, next) => {
             isPizzaSelected: isPizzaSelected,
             isDrinkSelected: isDrinkSelected,
             isSideSelected: isSideSelected,
-            totalDishPerPageOption1Selected: totalDishPerPageOption1Selected,
-            totalDishPerPageOption2Selected: totalDishPerPageOption2Selected,
-            totalDishPerPageOption3Selected: totalDishPerPageOption3Selected,
+            totalDishPerPageOption: totalDishPerPageOption,
             totalResult: totalResult,
             dishes: dishes,
             totalPage: totalPage,
@@ -132,8 +138,10 @@ exports.pagination = async (req, res, next) => {
         currentPage = '1';
 
     if (totalDishPerPage === undefined)
-        totalDishPerPage = '1';
-
+        totalDishPerPage = parseInt(req.session.totalDishPerPage);
+    else {
+        req.session.totalDishPerPage = parseInt(totalDishPerPage);
+    }
     let totalPage;
     let dishes;
     let totalResult = 0;
