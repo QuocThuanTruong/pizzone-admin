@@ -158,10 +158,7 @@ exports.delete = async (req, res, next) => {
     let parentId = req.body['parent-id'];
     let subcategoryId = req.body['id'];
 
-    const _ = await subcategoryModel.deleteSubCategoryById(subcategoryId)
-
-    console.log(parentId)
-    console.log(subcategoryId)
+    const _ = await subcategoryModel.deleteSubCategoryById(parentId, subcategoryId)
 
     this.index(req, res, next)
 }
@@ -185,12 +182,12 @@ exports.update = async (req, res, next) => {
     let subcategoryId = req.params.id;
     let parentCategoryId = req.query.parent;
 
-    let subcategory = await subcategoryModel.getSubCategoryById(subcategoryId);
+    let subcategory = await subcategoryModel.getSubCategoryByIdAndParentCategory(parentCategoryId, subcategoryId);
     let categories = await categoryModel.getAllCategory()
 
     for (let i = 0; i < categories.length; i++) {
         if (categories[i].category_id === subcategory.category) {
-            categories[i].subcategory = true;
+            subcategory.parentCategoryName = categories[i].name;
         }
     }
 
@@ -204,8 +201,7 @@ exports.update = async (req, res, next) => {
 
 exports.confirmUpdate = async (req, res, next) => {
     let subcategory = {
-        oldParent : req.query.parent,
-        category: req.body['category'],
+        category:  req.query.parent,
         subcategory_id: req.params.id,
         name: req.body['subcategory'],
         is_active: req.body['status']

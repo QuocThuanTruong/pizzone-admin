@@ -119,36 +119,36 @@ exports.totalSubcategoryByParentCategory = async (parentCategoryId) => {
     return result[0].total
 }
 
-exports.deleteSubCategoryById = async (subcategoryId) => {
-    await execQuery('UPDATE dishes_subcategory SET is_active = -1 where subcategory_id = ' + subcategoryId)
+exports.deleteSubCategoryById = async (parentCategoryId, subcategoryId) => {
+    await execQuery('UPDATE dishes_subcategory SET is_active = -1 where subcategory_id = ' + subcategoryId + ' and category = ' + parentCategoryId)
 }
 
 exports.addNewSubCategory = async (parentCategoryId, subcategoryName) => {
-    let subcategoryId = await this.getMaxSubcategoryId() + 1;
+    let subcategoryId = await this.getMaxSubcategoryIdByParentCategoryId(parentCategoryId) + 1;
 
-    let exists = await this.isExistsSubcategory(subcategoryName)
+    let exists = await this.isExistsSubcategory(parentCategoryId, subcategoryName)
 
     if (exists) {
-        await execQuery('UPDATE dishes_subcategory set is_active = 1 where name = \'' + subcategoryName + '\'')
+        await execQuery('UPDATE dishes_subcategory set is_active = 1 where name = \'' + subcategoryName + '\' and category = ' + parentCategoryId)
     } else {
         await execQuery('INSERT INTO dishes_subcategory (category, subcategory_id, name, is_active) values(' + parentCategoryId + ', ' + subcategoryId + ', \'' + subcategoryName + '\', 1)');
     }
 }
 
-exports.getMaxSubcategoryId = async () => {
-    const result = await execQuery('SELECT MAX(subcategory_id) as max from dishes_subcategory')
+exports.getMaxSubcategoryIdByParentCategoryId = async (parenCategoryId) => {
+    const result = await execQuery('SELECT MAX(subcategory_id) as max from dishes_subcategory where category = ' + parenCategoryId)
 
     return result[0].max
 }
 
-exports.isExistsSubcategory = async (subcategoryName) => {
-    let result = await execQuery('SELECT EXISTS(SELECT * FROM dishes_subcategory WHERE name = \''+subcategoryName+'\') as e')
+exports.isExistsSubcategory = async (parentCategoryId, subcategoryName) => {
+    let result = await execQuery('SELECT EXISTS(SELECT * FROM dishes_subcategory WHERE name = \''+subcategoryName+'\' and category = ' + parentCategoryId + ') as e')
 
     return result[0].e;
 }
 
-exports.getSubCategoryById = async (subcategoryId) => {
-    let result = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' + subcategoryId + ' and is_active <> -1');
+exports.getSubCategoryByIdAndParentCategory = async (parentCategoryId, subcategoryId) => {
+    let result = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' + subcategoryId + ' and is_active <> -1 and category = ' + parentCategoryId);
 
     result = await fullSubCategoryInfo(result);
 
@@ -156,5 +156,5 @@ exports.getSubCategoryById = async (subcategoryId) => {
 }
 
 exports.updateSubcategory = async (subcategory) => {
-    await execQuery('UPDATE dishes_subcategory SET name = \'' + subcategory.name + '\', is_active = ' + subcategory.is_active + ', category = ' + subcategory.category + ' WHERE subcategory_id = ' + subcategory.subcategory_id)
+    await execQuery('UPDATE dishes_subcategory SET name = \'' + subcategory.name + '\', is_active = ' + subcategory.is_active + ' WHERE subcategory_id = ' + subcategory.subcategory_id + ' and category = ' + subcategory.category)
 }

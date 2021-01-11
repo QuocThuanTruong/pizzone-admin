@@ -33,11 +33,7 @@
                                 <div class="form-group">
                                     <label>Thể loại</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category">
-                                            {{#each categories}}
-                                                <option {{selected_category subcategory}} value="{{category_id}}">{{name}}</option>
-                                            {{/each}}
-                                        </select>
+                                        <input class="form-control" id="category" name="category" readonly="" value="{{subcategory.parentCategoryName}}"/>
                                     </div>
                                 </div>
 
