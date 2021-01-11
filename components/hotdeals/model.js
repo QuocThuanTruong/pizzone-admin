@@ -24,18 +24,21 @@ async function fullHotDealInfo(hotdeals) {
     for (let i = 0; i < hotdeals.length; i++) {
         switch (hotdeals[i].is_active) {
             case 0:
-                hotdeals[i].subcategoryStatusActive = 'Passive';
+                hotdeals[i].hotdealStatusActive = 'Passive';
                 hotdeals[i].isActive = false;
                 hotdeals[i].status_name_uppercase = '̣ĐANG CHUẨN BỊ';
                 break;
             case 1:
-                hotdeals[i].subcategoryStatusActive = 'Active';
+                hotdeals[i].hotdealStatusActive = 'Active';
                 hotdeals[i].isActive = true;
                 hotdeals[i].status_name_uppercase = '̣ĐANG GIAO HÀNG';
                 break;
         }
-        hotdeals[i].start_time_string = hotdeals[i].start_time.getMonth().toString() + '/' + hotdeals[i].start_time.getDate().toString() + '/' + hotdeals[i].start_time.getFullYear().toString()
-        hotdeals[i].end_time_string = hotdeals[i].end_time.getMonth().toString() + '/' + hotdeals[i].start_time.getDate().toString() + '/' + hotdeals[i].start_time.getFullYear().toString()
+        let start_time = new Date(hotdeals[i].start_time)
+        let end_time = new Date(hotdeals[i].end_time)
+
+        hotdeals[i].start_time_string = (start_time.getMonth() + 1).toString() + '/' + start_time.getDate().toString() + '/' + start_time.getFullYear().toString()
+        hotdeals[i].end_time_string = (end_time.getMonth() + 1).toString() + '/' + end_time.getDate().toString() + '/' + end_time.getFullYear().toString()
         hotdeals[i].start_time =  hotdeals[i].start_time.toISOString().slice(0, 19).replace('T', ' ')
         hotdeals[i].end_time =  hotdeals[i].end_time.toISOString().slice(0, 19).replace('T', ' ')
 
