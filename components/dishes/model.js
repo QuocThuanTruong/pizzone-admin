@@ -131,14 +131,6 @@ exports.getDishById = async (id) => {
     return dishes[0]
 }
 
-exports.getListDoughById = async (id) => {
-    return await execQuery('SELECT * FROM dishes_doughs where dish = ' +id)
-}
-
-exports.getListToppingById = async (id) => {
-    return await execQuery('SELECT * FROM dishes_toppings where dish = ' +id)
-}
-
 exports.getListSizeById = async (id) => {
     return await execQuery('SELECT * FROM dishes_sizes where dish = ' +id)
 }

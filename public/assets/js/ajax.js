@@ -62,6 +62,25 @@ function confirmDeleteOrder() {
     form.submit()
 }
 
+
+function confirmDeleteCategory() {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/manage-categories/dishes-categories";
+
+    const inputID = document.getElementById('id')
+
+    console.log(inputID.value)
+
+    form.appendChild(inputID);
+
+    document.body.appendChild(form);
+
+    console.log(form)
+
+    form.submit()
+}
+
 function gotoPage(categoryId, page) {
     const categories = [1, 2, 3]
     const category = categories[document.getElementById('category').selectedIndex]
@@ -178,6 +197,47 @@ function gotoPageOrder(page) {
             let ordersTemplate = Handlebars.compile($('#main-manage-order-template').html());
             let orders = ordersTemplate({orders: data.orders})
             $('#main-manage-order').html(orders)
+
+            //render pagination-navigation
+            let paginationTemplate = Handlebars.compile($("#pagination-template").html());
+            let pageNavigation = paginationTemplate({page : data.page, totalPage: data.totalPage})
+            $('#pagination').html(pageNavigation)
+
+            //render total result
+            let totalResultTemplate = Handlebars.compile($("#total-result-template").html());
+            let totalResult = totalResultTemplate({totalResult: data.totalResult})
+            $('#total-result').html(totalResult)
+        },
+        error: function (err) {
+            console.log(err)
+        }
+    })
+}
+
+function gotoPageCategory(page) {
+    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
+
+    const sortByArr = [1, 2]
+    const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
+
+    let url='/manage-categories/dishes-categories?page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+
+    let keyName = document.getElementById('key-name').value;
+    if (keyName.length > 0) {
+        url += '&key_name=' + keyName;
+    }
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function (data) {
+            console.log(data)
+
+            //render dishes
+            let categoriesTemplate = Handlebars.compile($('#main-manage-category-template').html());
+            let categories = categoriesTemplate({categories: data.categories})
+            $('#main-manage-category').html(categories)
 
             //render pagination-navigation
             let paginationTemplate = Handlebars.compile($("#pagination-template").html());

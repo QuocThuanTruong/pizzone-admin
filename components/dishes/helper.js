@@ -154,6 +154,57 @@ function helper(hbs) {
         return html
     });
 
+    hbs.registerHelper('render_pagination_category', function (page, totalPage) {
+        let currentPage = parseInt(page)
+        let previousPage = currentPage - 1
+        let nextPage = currentPage + 1
+        let lastPage = parseInt(totalPage)
+
+        let html = '';
+
+        html += '<nav class="float-right" aria-label="..."><ul class="pagination">'
+        if (previousPage > 0) {
+            html += '<li class="page-item"><a class="page-link" tabindex="-1" onClick="gotoPageCategory('+previousPage+')"><i class="fa fa-arrow-left"></i></a></li>'
+        } else {
+            html += '<li class="page-item"><a class="page-link" tabindex="-1"><i class="fa fa-arrow-left"></i></a></li>'
+        }
+
+        if (currentPage - 1 >= 3) {
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory(1)">1</a></li>'
+            html += '.....'
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+previousPage+')">'+previousPage+'</a></li>'
+            html += '<li class="page-item active"><a class="page-link">'+currentPage+'</a></li>'
+        } else if (currentPage === 1){
+            html += '<li class="page-item active"><a class="page-link">1</a></li>'
+        } else if (currentPage === 2){
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory(1)">1</a></li>'
+            html += '<li class="page-item active"><a class="page-link">2</a></li>'
+        } else if (currentPage === 3) {
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory(1)">1</a></li>'
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory(2)">2</a></li>'
+            html += '<li class="page-item active"><a class="page-link">3</a></li>'
+        }
+
+        if (totalPage - currentPage >= 3) {
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+nextPage+')">'+nextPage+'</a></li>'
+            html += '.....'
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+lastPage+')">'+lastPage+'</a></li>'
+        } else if (totalPage - currentPage === 2){
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+nextPage+')">'+nextPage+'</a></li>'
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+lastPage+')">'+lastPage+'</a></li>'
+        } else if (totalPage - currentPage === 1){
+            html += '<li class="page-item "><a class="page-link" onClick="gotoPageCategory('+nextPage+')">'+nextPage+'</a></li>'
+        }
+
+        if (nextPage <= lastPage) {
+            html += '<li class="page-item"><a class="page-link" onClick="gotoPageCategory('+nextPage+')"><i class="fa fa-arrow-right"></i></a></li></ul></nav>'
+        } else {
+            html += '<li class="page-item"><a class="page-link"><i class="fa fa-arrow-right"></i></a></li></ul></nav>'
+        }
+
+        return html
+    });
+
     hbs.registerHelper('index', (i) => {
         return i + 1
     })
@@ -188,6 +239,20 @@ function helper(hbs) {
                 break;
             case 3:
                 result = 'badge-danger';
+                break;
+        }
+
+        return result;
+    })
+
+    hbs.registerHelper('categoryActive', function (active) {
+        let result = '';
+        switch (active) {
+            case 0:
+                result = 'badge-danger';
+                break;
+            case 1:
+                result = 'badge-success';
                 break;
         }
 

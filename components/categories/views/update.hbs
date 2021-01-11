@@ -28,25 +28,22 @@
                             <div class="locked-bagde float-right m-r-20"><h5><span class="badge badge-success">ACTIVE</span></h5></div>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-categories/dishes-categories/update/{{category_id}}">
                                 <div class="form-group">
                                     <label>Tên</label>
-                                    <input type="text" class="form-control" required placeholder="Tên thể loại" name="name" id="name"/>
+                                    <input type="text" class="form-control" required placeholder="Tên thể loại" name="name" id="name" value="{{name}}"/>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <div >
-                                        <select class="form-control" id="status" name="status" onchange="changeCategory({{dish_id}})">
-                                            {{#if isPizzaSelected}}
+                                        <select class="form-control" id="status" name="status">
+                                            {{#if isActive}}
                                                 <option selected>Active</option>
+                                                <option>Not active</option>
                                             {{else}}
                                                 <option>Active</option>
-                                            {{/if}}
-                                            {{#if isDrinkSelected}}
                                                 <option selected>Not active</option>
-                                            {{else}}
-                                                <option>Not active</option>
                                             {{/if}}
                                         </select>
                                     </div>
@@ -58,7 +55,7 @@
                                             Cập nhật
                                         </button>
 
-                                        <a href="/manage-dishes">
+                                        <a href="/manage-categories/dishes-categories">
                                             <button type="reset" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>

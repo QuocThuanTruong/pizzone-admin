@@ -27,10 +27,10 @@
                             <h4 class="mt-0 header-title">Điền đầy đủ thông tin của loại món ăn cần thêm</h4>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-categories/dishes-categories/add" >
                                 <div class="form-group">
                                     <label>Tên</label>
-                                    <input type="text" class="form-control" required placeholder="Tên thể loại" name="name" id="name"/>
+                                    <input type="text" class="form-control" required placeholder="Tên thể loại" name="category-name" id="name"/>
                                 </div>
 
                                 <div class="form-group">
@@ -39,7 +39,7 @@
                                             Thêm
                                         </button>
 
-                                        <a href="/manage-dishes">
+                                        <a href="/manage-categories/dishes-categories">
                                             <button type="reset" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
