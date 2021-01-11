@@ -20,50 +20,62 @@ function execQuery(queryString) {
     })
 }
 
-async function fullOrderInfo(orders) {
-    for (let i = 0; i < orders.length; i++) {
-        let user = await userModel.getUserById(orders[i].user)
-
-        orders[i].user = user
-
-        switch (orders[i].status) {
+async function fullHotDealInfo(hotdeals) {
+    for (let i = 0; i < hotdeals.length; i++) {
+        switch (hotdeals[i].is_active) {
             case 0:
-                orders[i].status_name = 'Đang chuẩn bị';
-                orders[i].status_name_uppercase = '̣ĐANG CHUẨN BỊ';
+                hotdeals[i].subcategoryStatusActive = 'Passive';
+                hotdeals[i].isActive = false;
+                hotdeals[i].status_name_uppercase = '̣ĐANG CHUẨN BỊ';
                 break;
             case 1:
-                orders[i].status_name = 'Đang giao hàng';
-                orders[i].status_name_uppercase = '̣ĐANG GIAO HÀNG';
-                break;
-            case 2:
-                orders[i].status_name = 'Đã giaọ hàng';
-                orders[i].status_name_uppercase = '̣ĐÃ GIAỌ HÀNG';
-                break;
-            case 3:
-                orders[i].status_name = 'Đã hủy';
-                orders[i].status_name_uppercase = '̣ĐÃ HỦỴ';
+                hotdeals[i].subcategoryStatusActive = 'Active';
+                hotdeals[i].isActive = true;
+                hotdeals[i].status_name_uppercase = '̣ĐANG GIAO HÀNG';
                 break;
         }
+        hotdeals[i].start_time_string = hotdeals[i].start_time.getMonth().toString() + '/' + hotdeals[i].start_time.getDate().toString() + '/' + hotdeals[i].start_time.getFullYear().toString()
+        hotdeals[i].end_time_string = hotdeals[i].end_time.getMonth().toString() + '/' + hotdeals[i].start_time.getDate().toString() + '/' + hotdeals[i].start_time.getFullYear().toString()
+        hotdeals[i].start_time =  hotdeals[i].start_time.toISOString().slice(0, 19).replace('T', ' ')
+        hotdeals[i].end_time =  hotdeals[i].end_time.toISOString().slice(0, 19).replace('T', ' ')
+
+        hotdeals[i].dishDetail = await dishModel.getDishById(hotdeals[i].dish)
     }
 
-    return orders;
+    return hotdeals;
 }
 
-exports.getAllOrder = async (page, totalDishPerPage, sortBy) => {
+exports.updateHotDeal = async (hotdeal) => {
+    await execQuery('UPDATE hot_deal SET discount = ' + hotdeal.discount + ', start_time = \'' + hotdeal.start_time + '\', end_time = \'' + hotdeal.end_time + '\', is_active = ' + hotdeal.is_active + ' WHERE deal_id = ' + hotdeal.deal_id)
+}
+
+exports.getAllHotDeal = async (page, totalDishPerPage, sortBy) => {
     let sort = '';
 
     switch (sortBy) {
         case '1':
-            sort = 'created_date';
+            sort = 'discount desc';
             break;
         case '2':
-            sort = 'total_price';
+            sort = 'start_time';
+            break;
+        case '3':
+            sort = 'end_time';
             break;
     }
 
-    let orders = await execQuery('SELECT * from orders where is_active = 1 ORDER BY ' + sort + ' LIMIT ' + totalDishPerPage + ' OFFSET ' +((page - 1) * totalDishPerPage))
+    let hotdeals = await execQuery('SELECT * from hot_deal where is_active <> -1 ORDER BY ' + sort + ' LIMIT ' + totalDishPerPage + ' OFFSET ' +((page - 1) * totalDishPerPage))
 
-    return fullOrderInfo(orders);
+    return await fullHotDealInfo(hotdeals);
+}
+
+
+exports.totalHotDeal = async () => {
+    let query = 'SELECT COUNT(deal_id) as total FROM hot_deal where is_active <> -1';
+
+    let result = await execQuery(query)
+
+    return result[0].total
 }
 
 exports.searchByKeyName = async (keyName, page, totalDishPerPage, sortBy) => {
@@ -71,82 +83,89 @@ exports.searchByKeyName = async (keyName, page, totalDishPerPage, sortBy) => {
 
     switch (sortBy) {
         case '1':
-            sort = 'created_date';
+            sort = 'discount desc';
             break;
         case '2':
-            sort = 'total_price';
+            sort = 'start_time';
+            break;
+        case '3':
+            sort = 'end_time';
             break;
     }
 
-    let query = 'SELECT o.order_id, o.user, o.total_price, o.created_date, o.status FROM orders as o left JOIN user as u on o.user = u.user_id WHERE MATCH(u.name) AGAINST(\''+keyName+'\') and u.is_active = 1 and o.is_active = 1 ORDER BY ' + sort + ' LIMIT ' +totalDishPerPage + ' OFFSET '+((page - 1) * totalDishPerPage)
-    let orders = await execQuery(query)
+    let query = 'SELECT h.deal_id, h.dish, h.discount, h.start_time, h.end_time, h.is_active FROM hot_deal as h left JOIN dishes as d on h.dish = d.dish_id WHERE MATCH(d.name) AGAINST(\''+keyName+'\') and h.is_active <> -1 and d.is_active = 1 ORDER BY ' + sort + ' LIMIT ' +totalDishPerPage + ' OFFSET '+((page - 1) * totalDishPerPage)
+    let hotdeals = await execQuery(query)
 
-    return fullOrderInfo(orders);
+    return await fullHotDealInfo(hotdeals);
 }
 
 exports.totalResultByKeyName = async (keyName) => {
     keyName = decodeURIComponent(keyName)
 
-    let query = 'SELECT COUNT(o.order_id) as total FROM orders as o left JOIN user as u on o.user = u.user_id WHERE MATCH(u.name) AGAINST(\''+keyName+'\') and u.is_active = 1 and o.is_active = 1'
+    let query = 'SELECT COUNT(h.deal_id) as total FROM hot_deal as h left JOIN dishes as d on h.dish = d.dish_id WHERE MATCH(d.name) AGAINST(\''+keyName+'\') and h.is_active <> -1 and d.is_active = 1'
 
     let result = await execQuery(query);
 
     return result[0].total
 }
 
-exports.deleteOrder = async (order_id) => {
-    await execQuery('UPDATE orders SET is_active = 0 where order_id = ' + order_id)
+exports.deleteHotDeal = async (deal_id) => {
+    console.log(deal_id)
+
+    await execQuery('UPDATE hot_deal SET is_active = -1 where deal_id = ' + deal_id)
 }
 
-exports.getOrderByCategory = async (categoryId, page, totalDishPerPage, sortBy) => {
+exports.getHotDealByCategory = async (categoryId, page, totalDishPerPage, sortBy) => {
     let sort = '';
 
     switch (sortBy) {
         case '1':
-            sort = 'created_date';
+            sort = 'discount desc';
             break;
         case '2':
-            sort = 'total_price';
+            sort = 'start_time';
+            break;
+        case '3':
+            sort = 'end_time';
             break;
     }
 
-    let orders = await execQuery('SELECT * from orders where is_active = 1 and status = ' + categoryId + ' ORDER BY ' + sort + ' LIMIT ' + totalDishPerPage + ' OFFSET ' +((page - 1) * totalDishPerPage))
+    let hotdeals = await execQuery('SELECT * from hot_deal where is_active = ' + categoryId + ' ORDER BY ' + sort + ' LIMIT ' + totalDishPerPage + ' OFFSET ' +((page - 1) * totalDishPerPage))
 
-    return fullOrderInfo(orders);
+    return await fullHotDealInfo(hotdeals);
 }
 
-exports.totalOrderByCategory = async (categoryId) => {
-    let query = 'SELECT COUNT(*) as total from orders where is_active = 1 and status = ' + categoryId;
+exports.totalHotDealByCategory = async (categoryId) => {
+    let query = 'SELECT COUNT(*) as total from hot_deal where is_active = '+ categoryId;
 
     let result = await execQuery(query);
 
     return result[0].total
 }
 
-exports.totalOrder = async () => {
-    let query = 'SELECT COUNT(order_id) as total FROM orders where is_active = 1';
 
-    let result = await execQuery(query)
+exports.getHotDealById = async (deal_id) => {
+    let hotdeals = await execQuery('SELECT * FROM hot_deal WHERE deal_id = ' + deal_id + ' and is_active <> -1')
 
-    return result[0].total
-}
+    hotdeals = await fullHotDealInfo(hotdeals)
 
-exports.getOrderById = async (order_id) => {
-    let orders = await execQuery('SELECT * FROM orders WHERE order_id = ' + order_id + ' and is_active = 1')
+    let hotdeal = hotdeals[0];
 
-    orders = await fullOrderInfo(orders)
-
-    let order = orders[0];
-
-    order.orderDetail = await execQuery('SELECT * FROM order_detail where order_id = ' + order.order_id + ' and is_active = 1')
-
-    for (let i = 0; i < order.orderDetail.length; i++) {
-        order.orderDetail[i].dishDetail = await  dishModel.getDishById(order.orderDetail[i].dish)
-    }
-
-    return order
+    return hotdeal
 }
 
 exports.updateStatusOrder = async (order_id, status) => {
     await execQuery('UPDATE orders SET status = ' + status + ' WHERE order_id = ' + order_id)
+}
+
+exports.getMaxIdHotDeal = async () => {
+    const result = await execQuery('SELECT MAX(deal_id) as max from hot_deal')
+
+    return result[0].max
+}
+
+exports.addNewHotDeal = async (hotdeal) => {
+    let deal_id = await this.getMaxIdHotDeal() + 1;
+
+    await execQuery('INSERT INTO hot_deal (deal_id, dish, discount, quantity, start_time, end_time, is_active) values(' + deal_id + ', ' + hotdeal.dish + ', ' + hotdeal.discount + ', 1000, \'' + hotdeal.start_time + '\', \'' + hotdeal.end_time + '\', 1)');
 }

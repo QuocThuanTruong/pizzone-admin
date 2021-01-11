@@ -27,15 +27,11 @@
                             <div class="locked-bagde float-right m-r-20"><h5><span class="badge badge-success">ACTIVE</span></h5></div>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-hot-deals/update/{{deal_id}}">
                                 <div class="form-group">
                                     <label>Món ăn</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category" onchange="changeCategory({{dish_id}})">
-                                            <option selected>Pizza hải sản</option>
-                                            <option >Coca cola</option>
-                                            <option >Mì Ý</option>
-                                        </select>
+                                        <input class="form-control" id="category" name="dish-name" value="{{dishDetail.name}}" readonly/>
                                     </div>
                                 </div>
 
@@ -45,7 +41,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">%</span>
                                         </div>
-                                        <input type="text" class="form-control" required placeholder="Phần trăm giảm giá" name="name" id="name"/>
+                                        <input type="number" class="form-control" required placeholder="Phần trăm giảm giá" name="discount" id="discount" value="{{discount}}" min="0"/>
                                     </div>
                                 </div>
 
@@ -53,8 +49,8 @@
                                     <label>Khoảng thời gian diễn ra</label>
                                     <div>
                                         <div class="input-daterange input-group" id="date-range">
-                                            <input type="text" class="form-control" name="start" placeholder="Start Date" />
-                                            <input type="text" class="form-control" name="end" placeholder="End Date" />
+                                            <input type="text" class="form-control" name="start" placeholder="Start Date" value="{{start_time_string}}" required/>
+                                            <input type="text" class="form-control" name="end" placeholder="End Date" value="{{end_time_string}}" required/>
                                         </div>
                                     </div>
                                 </div>
@@ -62,11 +58,14 @@
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <div >
-                                        <select class="form-control" id="status" name="status" onchange="changeCategory({{dish_id}})">
-
-                                                <option selected>Active</option>
-
-                                                <option>Active</option>
+                                        <select class="form-control" id="status" name="is_active">
+                                            {{#if isActive}}
+                                                <option selected value="1">Active</option>
+                                                <option value="0">Passive</option>
+                                            {{else}}
+                                                <option value="1">Active</option>
+                                                <option selected value="0">Passive</option>
+                                            {{/if}}
 
                                         </select>
                                     </div>
@@ -78,8 +77,8 @@
                                             Cập nhật
                                         </button>
 
-                                        <a href="/manage-dishes">
-                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        <a href="/manage-hot-deals">
+                                            <button type="button" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
                                         </a>

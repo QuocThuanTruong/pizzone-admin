@@ -40,7 +40,7 @@ exports.index = async (req, res, next) => {
                 break;
         }
 
-        let categories = await categoryModel.getAllCategory(currentPage, totalDishPerPage, sortBy);
+        let categories = await categoryModel.getAllCategoryPaging(currentPage, totalDishPerPage, sortBy);
         let totalResult = await categoryModel.totalCategory();
 
         if (key_name !== undefined) {
@@ -59,6 +59,8 @@ exports.index = async (req, res, next) => {
             page: currentPage,
             isLogin: true
         }
+
+        console.log(dataContext)
 
         res.render('.././components/categories/views/index', dataContext);
     } else {
@@ -81,6 +83,29 @@ exports.pagination = async (req, res, next) => {
         totalDishPerPage = parseInt(req.session.totalCategoryPerPage);
     else {
         req.session.totalCategoryPerPage = parseInt(totalDishPerPage);
+    }
+
+    let totalDishPerPageOption = {
+        option1: false,
+        option2: false,
+        option3: false,
+    }
+    switch (totalDishPerPage) {
+        case 1 :
+            totalDishPerPageOption.option1 = true;
+            totalDishPerPageOption.option2 = false;
+            totalDishPerPageOption.option3 = false;
+            break;
+        case 2 :
+            totalDishPerPageOption.option1 = false;
+            totalDishPerPageOption.option2 = true;
+            totalDishPerPageOption.option3 = false;
+            break;
+        case 3 :
+            totalDishPerPageOption.option1 = false;
+            totalDishPerPageOption.option2 = false;
+            totalDishPerPageOption.option3 = true;
+            break;
     }
 
     let categories = await categoryModel.getAllCategory(currentPage, totalDishPerPage, sortBy);

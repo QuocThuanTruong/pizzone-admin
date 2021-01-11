@@ -2,7 +2,7 @@ const {db} = require('../../dal/db')
 
 function execQuery(queryString) {
     return new Promise(data => {
-        /*        console.log(queryString)*/
+                console.log(queryString)
         db.query(queryString, (err, results, fields) => {
             if (err) {
                 console.log(err)
@@ -35,7 +35,7 @@ function fullCategoryInfo(categories) {
     return categories
 }
 
-exports.getAllCategory = async (page, totalDishPerPage, sortBy) => {
+exports.getAllCategoryPaging = async (page, totalDishPerPage, sortBy) => {
     let sort = '';
 
     switch (sortBy) {

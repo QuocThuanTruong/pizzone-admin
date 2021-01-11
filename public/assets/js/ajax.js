@@ -251,13 +251,13 @@ function gotoPageSubcategory(page) {
 }
 
 function gotoPageHotDeal(page) {
-    const categories = [0, 1]
+    const categories = [1, 0]
     const category = categories[document.getElementById('category').selectedIndex]
 
     const totalDishPerPageArr = [1, 2, 3]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
-    const sortByArr = [1, 2, 3, 4]
+    const sortByArr = [1, 2, 3]
     const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
 
     let url='/manage-hot-deals?category=' + category + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;

@@ -264,6 +264,9 @@ exports.update = async (dish) => {
     }
 }
 
+exports.getAllDish = async () => {
+    return await execQuery('SELECT * FROM dishes')
+}
 /*
 exports.test = async () => {
    await execQuery('UPDATE users SET avatar = \'https://res.cloudinary.com/hcmus-web/image/upload/v1607362757/WebFinalProject/Images/user/1/73083634_2453241641624544_6378836173334249472_o_z20x96.jpg\' where user_id = 1')

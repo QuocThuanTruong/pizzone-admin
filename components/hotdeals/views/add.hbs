@@ -24,16 +24,15 @@
                         <div class="card-body">
 
                             <h4 class="mt-0 header-title">Điền đầy đủ thông tin của deal cần thêm</h4>
-
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data">
+                            <form method="POST" action="/manage-hot-deals/add">
                                 <div class="form-group">
                                     <label>Món ăn</label>
                                     <div >
-                                        <select class="form-control" id="category" name="category" onchange="changeCategory({{dish_id}})">
-                                            <option selected>Pizza hải sản</option>
-                                            <option >Coca cola</option>
-                                            <option >Mì Ý</option>
+                                        <select class="form-control" id="dish" name="dish" required>
+                                            {{#each dishes}}
+                                                <option value="{{dish_id}}">{{name}}</option>
+                                            {{/each}}
                                         </select>
                                     </div>
                                 </div>
@@ -44,7 +43,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">%</span>
                                         </div>
-                                    <input type="text" class="form-control" required placeholder="Phần trăm giảm giá" name="name" id="name"/>
+                                    <input type="number" class="form-control" required placeholder="Phần trăm giảm giá" name="discount" id="discount"/>
                                     </div>
                                 </div>
 
@@ -52,8 +51,8 @@
                                     <label>Khoảng thời gian diễn ra</label>
                                     <div>
                                         <div class="input-daterange input-group" id="date-range">
-                                            <input type="text" class="form-control" name="start" placeholder="Start Date" />
-                                            <input type="text" class="form-control" name="end" placeholder="End Date" />
+                                            <input type="text" class="form-control" name="start" placeholder="Start Date" required/>
+                                            <input type="text" class="form-control" name="end" placeholder="End Date" required/>
                                         </div>
                                     </div>
                                 </div>
@@ -64,8 +63,8 @@
                                             Thêm
                                         </button>
 
-                                        <a href="/manage-dishes">
-                                            <button type="reset" class="btn btn-secondary waves-effect m-l-5">
+                                        <a href="/manage-hot-deals">
+                                            <button type="button" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
                                         </a>

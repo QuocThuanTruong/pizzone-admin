@@ -51,7 +51,7 @@
 
                                         <p class="found-search-item col-form-label">Status</p>
                                         <div class="col-sm-auto">
-                                            <select class="form-control" id="sort-by" onchange="gotoPageHotDeal(1)">
+                                            <select class="form-control" id="category" onchange="gotoPageHotDeal(1)">
                                                 <option>Active</option>
                                                 <option>Passive</option>
                                             </select>
@@ -60,7 +60,6 @@
                                         <p class="found-search-item col-form-label">Sort by</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="sort-by" onchange="gotoPageHotDeal(1)">
-                                                <option>Name</option>
                                                 <option>Discount</option>
                                                 <option>Start date</option>
                                                 <option>End date</option>
@@ -120,8 +119,8 @@
                                     <tbody id="main-manage-hot-deal">
                                     {{#each hotdeals}}
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>{{dish.name}}</td>
+                                            <th scope="row">{{deal_id}}</th>
+                                            <td>{{dishDetail.name}}</td>
                                             <td>{{discount}}%</td>
                                             <td>{{start_time}}</td>
                                             <td>{{end_time}}</td>
@@ -131,7 +130,7 @@
                                             <td>
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
-                                                        <a href="/manage-hot-deals/update/1" role="button"
+                                                        <a href="/manage-hot-deals/update/{{deal_id}}" role="button"
                                                            class="btn btn-success waves-effect waves-light m-r-5"><i
                                                                 class="far fa-edit"></i></a>
                                                         <button type="button"
@@ -149,18 +148,18 @@
                                     <script type="text/x-handlebars-template" id="main-manage-hot-deal-template">
                                         \{{#each hotdeals}}
                                         <tr>
-                                            <th scope="row">1</th>
-                                            <td>\{{dish.name}}</td>
+                                            <th scope="row">\{{deal_id}}</th>
+                                            <td>\{{dishDetail.name}}</td>
                                             <td>\{{discount}}%</td>
                                             <td>\{{start_time}}</td>
                                             <td>\{{end_time}}</td>
                                             <!-- binding bage info -->
                                             <td><span class="badge \{{categoryActive
-                                            is_active}}">\{{hotdealStatusActive}}</span></td>
+                                            is_active}}">\{{subcategoryStatusActive}}</span></td>
                                             <td>
                                                 <div class="btn-toolbar form-group mb-0">
                                                     <div class="">
-                                                        <a href="/manage-hot-deals/update/1" role="button"
+                                                        <a href="/manage-hot-deals/update/\{{deal_id}}" role="button"
                                                            class="btn btn-success waves-effect waves-light m-r-5"><i
                                                                 class="far fa-edit"></i></a>
                                                         <button type="button"
@@ -173,7 +172,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        \{{/each}}
+                                    \{{/each}}
                                     </script>
 
                                 </table>

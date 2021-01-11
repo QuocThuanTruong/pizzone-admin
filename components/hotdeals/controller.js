@@ -1,4 +1,5 @@
 const hotdealModel = require('./model')
+const dishModel = require('../dishes/model')
 
 exports.index = async (req, res, next) => {
     if ((Object.keys(req.query).length === 0 && req.query.constructor === Object) || (Object.keys(req.query).length === 1 && req.query.category!== undefined)) {
@@ -10,16 +11,16 @@ exports.index = async (req, res, next) => {
         let sortBy = '1';
 
         if (categoryId === undefined || categoryId === "")
-            categoryId = '0';
+            categoryId = '1';
 
         if (currentPage === undefined)
             currentPage = '1';
 
-        if (req.session.totalOrderPerPage === undefined) {
-            req.session.totalOrderPerPage = 1
+        if (req.session.totalHotDealPerPage === undefined) {
+            req.session.totalHotDealPerPage = 1
         }
 
-        let totalDishPerPage = parseInt(req.session.totalOrderPerPage)
+        let totalDishPerPage = parseInt(req.session.totalHotDealPerPage)
 
         let totalDishPerPageOption = {
             option1: false,
@@ -44,24 +45,24 @@ exports.index = async (req, res, next) => {
                 break;
         }
 
-        let orders = await orderModel.getAllOrder(currentPage, totalDishPerPage, sortBy);
-        let totalResult = await orderModel.totalOrder();
+        let hotdeals = await hotdealModel.getAllHotDeal(currentPage, totalDishPerPage, sortBy);
+        let totalResult = await hotdealModel.totalHotDeal();
 
         if (key_name !== undefined) {
-            orders = await orderModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
+            hotdeals = await hotdealModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
 
-            totalResult = await orderModel.totalResultByKeyName(key_name)
+            totalResult = await hotdealModel.totalResultByKeyName(key_name)
         } else if (categoryId !== '') {
-            orders = await orderModel.getOrderByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
+            hotdeals = await hotdealModel.getHotDealByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
 
-            totalResult = await orderModel.totalOrderByCategory(categoryId);
+            totalResult = await hotdealModel.totalHotDealByCategory(categoryId);
         }
 
         let totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
         const dataContext = {
             totalResult: totalResult,
-            orders: orders,
+            hotdeals: hotdeals,
             totalDishPerPageOption: totalDishPerPageOption,
             totalPage: totalPage,
             page: currentPage,
@@ -84,35 +85,35 @@ exports.pagination = async (req, res, next) => {
     let sortBy = req.query.sortBy;
 
     if (categoryId === undefined || categoryId === "")
-        categoryId = '0';
+        categoryId = '1';
 
     if (currentPage === undefined)
         currentPage = '1';
 
     if (totalDishPerPage === undefined)
-        totalDishPerPage = parseInt(req.session.totalOrderPerPage);
+        totalDishPerPage = parseInt(req.session.totalHotDealPerPage);
     else {
-        req.session.totalOrderPerPage = parseInt(totalDishPerPage);
+        req.session.totalHotDealPerPage = parseInt(totalDishPerPage);
     }
 
-    let orders = await orderModel.getAllOrder(currentPage, totalDishPerPage, sortBy);
-    let totalResult = await orderModel.totalOrder();
+    let hotdeals = await hotdealModel.getAllHotDeal(currentPage, totalDishPerPage, sortBy);
+    let totalResult = await hotdealModel.totalHotDeal();
 
     if (key_name !== undefined) {
-        orders = await orderModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
+        hotdeals = await hotdealModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
 
-        totalResult = await orderModel.totalResultByKeyName(key_name)
+        totalResult = await hotdealModel.totalResultByKeyName(key_name)
     } else if (categoryId !== '') {
-        orders = await orderModel.getOrderByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
+        hotdeals = await hotdealModel.getHotDealByCategory(categoryId, currentPage, totalDishPerPage, sortBy)
 
-        totalResult = await orderModel.totalOrderByCategory(categoryId);
+        totalResult = await hotdealModel.totalHotDealByCategory(categoryId);
     }
 
     let totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
 
     const dataContext = {
         totalResult: totalResult,
-        orders: orders,
+        hotdeals: hotdeals,
         totalPage: totalPage,
         page: currentPage,
         category: categoryId,
@@ -122,11 +123,51 @@ exports.pagination = async (req, res, next) => {
     res.send(dataContext)
 }
 
-exports.add = async (req, res, next) => {
-    res.render('.././components/hotdeals/views/add')
+exports.delete = async (req, res, next) => {
+    const _ = await hotdealModel.deleteHotDeal(req.body['id'])
+
+    this.index(req, res, next)
 }
 
-exports.update = async (req, res, next) => {
+exports.add = async (req, res, next) => {
+    let dishes = await dishModel.getAllDish()
 
-    res.render('.././components/hotdeals/views/update', {});
+    res.render('.././components/hotdeals/views/add', {dishes})
+}
+
+exports.confirmAdd = async (req, res, next) => {
+    let hotdeal = {
+        dish: req.body['dish'],
+        discount: req.body['discount'],
+        start_time: new Date(req.body['start']).toISOString().slice(0, 19).replace('T', ' '),
+        end_time: new Date(req.body['end']).toISOString().slice(0, 19).replace('T', ' '),
+    }
+
+    await hotdealModel.addNewHotDeal(hotdeal);
+
+    res.redirect('/manage-hot-deals');
+}
+
+
+exports.update = async (req, res, next) => {
+    let hotdeal = await hotdealModel.getHotDealById(req.params.id)
+
+    res.render('.././components/hotdeals/views/update', hotdeal);
+}
+
+exports.confirmUpdate = async (req, res, next) => {
+    let deal_id = req.params.id
+
+    let hotdeal = {
+        deal_id: deal_id,
+        dish: req.body['dish'],
+        discount: req.body['discount'],
+        start_time: new Date(req.body['start']).toISOString().slice(0, 19).replace('T', ' '),
+        end_time: new Date(req.body['end']).toISOString().slice(0, 19).replace('T', ' '),
+        is_active: req.body['is_active']
+    }
+
+    await hotdealModel.updateHotDeal(hotdeal)
+
+    res.redirect('/manage-hot-deals')
 }
