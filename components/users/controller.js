@@ -16,7 +16,7 @@ exports.index = async (req, res, next) => {
             currentPage = '1';
 
         if (req.session.totalUserPerPage === undefined) {
-            req.session.totalUserPerPage = 1
+            req.session.totalUserPerPage = 4
         }
 
         let totalDishPerPage = parseInt(req.session.totalUserPerPage)
@@ -133,6 +133,10 @@ exports.detail = async (req, res, next) => {
     const user_id = req.params.id
 
     const account = await userModel.getUserById(user_id)
+
+    if (account.user_id === req.user.user_id) {
+        account.isAdmin = true;
+    }
 
     let dataContext = {
         account : account

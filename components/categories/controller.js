@@ -12,7 +12,7 @@ exports.index = async (req, res, next) => {
             currentPage = '1';
 
         if (req.session.totalCategoryPerPage === undefined) {
-            req.session.totalCategoryPerPage = 1
+            req.session.totalCategoryPerPage = 4
         }
 
         let totalDishPerPage = parseInt(req.session.totalCategoryPerPage)

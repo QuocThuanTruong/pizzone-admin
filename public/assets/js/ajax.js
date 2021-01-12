@@ -35,7 +35,7 @@ function confirmDelete(urlDelete) {
 function gotoPage(page) {
     const category = $('#category').find(":selected").text();
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2, 3, 4]
@@ -78,7 +78,7 @@ function gotoPageAccount(page) {
     const categories = [-1, 0, 1]
     const category = categories[document.getElementById('category').selectedIndex]
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2]
@@ -120,7 +120,7 @@ function gotoPageOrder(page) {
     const categories = [0, 1, 2, 3]
     const category = categories[document.getElementById('category').selectedIndex]
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2]
@@ -159,7 +159,7 @@ function gotoPageOrder(page) {
 }
 
 function gotoPageCategory(page) {
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2]
@@ -203,7 +203,7 @@ function gotoPageSubcategory(page) {
     const category =  $('#category').find(":selected").text();
     console.log(category)
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2]
@@ -247,7 +247,7 @@ function gotoPageHotDeal(page) {
     const categories = [1, 0]
     const category = categories[document.getElementById('category').selectedIndex]
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2, 3]
@@ -289,7 +289,7 @@ function gotoPageVoucher(page) {
     const categories = [1, 0]
     const category = categories[document.getElementById('category').selectedIndex]
 
-    const totalDishPerPageArr = [1, 2, 3]
+    const totalDishPerPageArr = [4, 6, 8]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
 
     const sortByArr = [1, 2, 3]

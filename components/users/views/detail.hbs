@@ -68,20 +68,22 @@
 
                                 <div class="form-group">
                                     <div>
-                                        {{#unless account.active}}
-                                            <button type="button" class="btn btn-success waves-effect waves-light" onclick="unlockAccount({{account.user_id}})">
-                                                Mở khóa người dùng này
-                                            </button>
-                                        {{else}}
-                                            <button type="button" class="btn btn-danger waves-effect waves-light" onclick="lockAccount({{account.user_id}})">
-                                                Khóa người dùng này
-                                            </button>
+                                        {{#unless account.isAdmin}}
+                                            {{#unless account.active}}
+                                                <button type="button" class="btn btn-success waves-effect waves-light" onclick="unlockAccount({{account.user_id}})">
+                                                    Mở khóa người dùng này
+                                                </button>
+                                            {{else}}
+                                                <button type="button" class="btn btn-danger waves-effect waves-light" onclick="lockAccount({{account.user_id}})">
+                                                    Khóa người dùng này
+                                                </button>
+                                            {{/unless}}
+                                            <a href="/manage-users">
+                                                <button type="button" class="btn btn-secondary waves-effect m-l-5">
+                                                    Bỏ qua
+                                                </button>
+                                            </a>
                                         {{/unless}}
-                                        <a href="/manage-users">
-                                            <button type="button" class="btn btn-secondary waves-effect m-l-5">
-                                                Bỏ qua
-                                            </button>
-                                        </a>
                                     </div>
                                 </div>
                             </form>

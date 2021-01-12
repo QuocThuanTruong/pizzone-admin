@@ -156,30 +156,6 @@ exports.getListSubcategory = async (id) => {
     return await execQuery('SELECT * FROM dishes_subcategory where category = ' + id + ' and is_active = 1');
 }
 
-exports.totalDish = async () => {
-    const queryResult =  await execQuery('SELECT COUNT(*) as total FROM dishes WHERE is_active = 1')
-
-    return queryResult[0].total
-}
-
-exports.totalPizza = async () => {
-    const queryResult =  await execQuery('SELECT COUNT(*) as total FROM dishes where category = 1  AND is_active = 1')
-
-    return queryResult[0].total
-}
-
-exports.totalDrink = async () => {
-    const queryResult =  await execQuery('SELECT COUNT(*) as total FROM dishes where category = 2  AND is_active = 1')
-
-    return queryResult[0].total
-}
-
-exports.totalSide = async () => {
-    const queryResult =  await execQuery('SELECT COUNT(*) as total FROM dishes where category = 3 AND is_active = 1')
-
-    return queryResult[0].total
-}
-
 exports.totalDishByCategory = async (categoryId) => {
     const queryResult =  await execQuery('SELECT COUNT(*) as total FROM dishes where category = '+categoryId+' AND is_active = 1')
 

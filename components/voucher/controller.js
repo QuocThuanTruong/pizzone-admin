@@ -16,7 +16,7 @@ exports.index = async (req, res, next) => {
             currentPage = '1';
 
         if (req.session.totalVoucherPerPage === undefined) {
-            req.session.totalVoucherPerPage = 1
+            req.session.totalVoucherPerPage = 4
         }
 
         let totalDishPerPage = parseInt(req.session.totalVoucherPerPage)
