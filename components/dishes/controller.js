@@ -438,7 +438,7 @@ exports.updateInfo = async (req, res, next) => {
         console.log(dish)
         const _ = await dishModel.update(dish)
 
-        rimraf.sync(path.join(__dirname, '..', 'tempImages'))
+        fs.rmdirSync(path.join(__dirname, '..', 'tempImages'), {recursive: true})
 
         this.update(req, res, next)
     })
@@ -604,7 +604,7 @@ exports.addInfo = async (req, res, next) => {
         console.log(dish)
         const _ = await dishModel.insert(dish)
 
-        rimraf.sync(path.join(__dirname, '..', 'tempImages'))
+        fs.rmdirSync(path.join(__dirname, '..', 'tempImages'), {recursive: true})
 
         this.add(req, res, next)
     })
