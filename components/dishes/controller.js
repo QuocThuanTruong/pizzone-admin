@@ -1,4 +1,5 @@
 const dishModel = require('./model')
+const categoryModel = require('../categories/model')
 
 const formidable = require('formidable');
 const fs = require('fs')
@@ -17,13 +18,24 @@ exports.index = async (req, res, next) => {
     if ((Object.keys(req.query).length === 0 && req.query.constructor === Object) || (Object.keys(req.query).length === 1 && req.query.category!== undefined)) {
         const key_name = req.query.key_name;
 
-        let categoryId = req.query.category;
+        let categoryName = req.query.category;
         let currentPage = req.query.page;
 
         let sortBy = '1';
+        let categories = await  categoryModel.getAllCategory()
 
-        if (categoryId === undefined || categoryId === "")
-            categoryId = '1';
+        let categoryId = 0;
+        if (categoryName === undefined || categoryName === "")
+            categoryId = categories[0].category_id;
+
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].name === categoryName) {
+                categoryId = categories[i].category_id;
+                categories[i].selected = "selected";
+
+                break;
+            }
+        }
 
         if (currentPage === undefined)
             currentPage = '1';
@@ -62,9 +74,6 @@ exports.index = async (req, res, next) => {
         let totalResult = 0;
 
         let isPizzaSelected = false;
-        let isDrinkSelected = false;
-        let isSideSelected = false;
-
 
         if (key_name !== undefined) {
             dishes = await dishModel.searchByKeyName(key_name, currentPage, totalDishPerPage, sortBy)
@@ -79,14 +88,6 @@ exports.index = async (req, res, next) => {
                 case '1':
                     isPizzaSelected = true;
                     break;
-
-                case '2':
-                    isDrinkSelected = true;
-                    break;
-
-                case '3':
-                    isSideSelected = true;
-                    break;
             }
 
             totalPage = Math.ceil(totalResult / (totalDishPerPage * 1.0))
@@ -94,7 +95,7 @@ exports.index = async (req, res, next) => {
 
         for (let dish of dishes) {
             dish.categoryName = await dishModel.getCategoryName(dish.category)
-            dish.subCategoryName = await dishModel.getSubCategoryName(dish.subcategory)
+            dish.subCategoryName = await dishModel.getSubCategoryName(dish.category, dish.subcategory)
 
             const statusTitle = ['Đã xóa', 'Còn hàng', 'Hết hàng']
             dish.statusName = statusTitle[dish.status]
@@ -102,8 +103,7 @@ exports.index = async (req, res, next) => {
 
         const dataContext = {
             isPizzaSelected: isPizzaSelected,
-            isDrinkSelected: isDrinkSelected,
-            isSideSelected: isSideSelected,
+            categories: categories,
             totalDishPerPageOption: totalDishPerPageOption,
             totalResult: totalResult,
             dishes: dishes,
@@ -124,15 +124,27 @@ exports.index = async (req, res, next) => {
 exports.pagination = async (req, res, next) => {
     const key_name = req.query.key_name;
 
-    let categoryId = req.query.category;
+    let categoryName = req.query.category;
     let currentPage = req.query.page;
     let totalDishPerPage = req.query.total_dish_per_page;
     let sortBy = req.query.sortBy;
 
     /*console.log(req.query)*/
 
-    if (categoryId === undefined || categoryId === "")
-        categoryId = '1';
+    let categories = await  categoryModel.getAllCategory()
+
+    let categoryId = 0;
+    if (categoryName === undefined || categoryName === "")
+        categoryId = categories[0].category_id;
+
+    for (let i = 0; i < categories.length; i++) {
+        if (categories[i].name === categoryName) {
+            categoryId = categories[i].category_id;
+            categories[i].selected = "selected";
+
+            break;
+        }
+    }
 
     if (currentPage === undefined)
         currentPage = '1';
@@ -147,8 +159,6 @@ exports.pagination = async (req, res, next) => {
     let totalResult = 0;
 
     let isPizzaSelected = false;
-    let isDrinkSelected = false;
-    let isSideSelected = false;
 
     /*console.log("Key name: ", key_name)*/
 
@@ -164,14 +174,6 @@ exports.pagination = async (req, res, next) => {
         switch (categoryId) {
             case '1':
                 isPizzaSelected = true;
-                break;
-
-            case '2':
-                isDrinkSelected = true;
-                break;
-
-            case '3':
-                isSideSelected = true;
                 break;
         }
 
@@ -197,7 +199,7 @@ exports.pagination = async (req, res, next) => {
 
     for (let dish of dishes) {
         dish.categoryName = await dishModel.getCategoryName(dish.category)
-        dish.subCategoryName = await dishModel.getSubCategoryName(dish.subcategory)
+        dish.subCategoryName = await dishModel.getSubCategoryName(dish.category, dish.subcategory)
 
         const statusTitle = ['Đã xóa', 'Còn hàng', 'Hết hàng']
         dish.statusName = statusTitle[dish.status]
@@ -205,8 +207,6 @@ exports.pagination = async (req, res, next) => {
 
     const dataContext = {
         isPizzaSelected: isPizzaSelected,
-        isDrinkSelected: isDrinkSelected,
-        isSideSelected: isSideSelected,
         totalDishPerPageOption1Selected: totalDishPerPageOption1Selected,
         totalDishPerPageOption2Selected: totalDishPerPageOption2Selected,
         totalDishPerPageOption3Selected: totalDishPerPageOption3Selected,
@@ -237,52 +237,67 @@ exports.update = async (req, res, next) => {
     dish.size = await dishModel.getListSizeById(dish_id)
 
     let isPizzaSelected = false;
-    let isDrinkSelected = false;
-    let isSideSelected = false;
     let subcategories
 
-    /* console.log(categoryId)*/
-    if (categoryParams !== undefined) {
-        categoryParams = parseInt(categoryParams)
-        switch (categoryParams) {
+    let categories = await  categoryModel.getAllCategory()
+    let categoryId = 0;
+
+    if (categoryParams !== "" && categoryParams !== undefined) {
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].name === categoryParams) {
+                categoryId = categories[i].category_id;
+                categories[i].selected = "selected";
+
+                break;
+            }
+        }
+
+        switch (categoryId) {
             case 1:
                 isPizzaSelected = true;
                 break;
 
-            case 2:
-                isDrinkSelected = true;
-                break;
-
-            case 3:
-                isSideSelected = true;
-                break;
         }
 
-        subcategories = await dishModel.getListSubcategory(categoryParams)
+        subcategories = await dishModel.getListSubcategory(categoryId)
+        for (let i = 0; i < subcategories.length; i++) {
+            if (subcategories[i].subcategory_id === dish.subcategory) {
+                subcategories[i].selected = "selected";
+
+                break;
+            }
+        }
+
     } else {
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].category_id === dish.category) {
+                categories[i].selected = "selected";
+
+                break;
+            }
+        }
+
         switch (dish.category) {
             case 1:
                 isPizzaSelected = true;
                 break;
-
-            case 2:
-                isDrinkSelected = true;
-                break;
-
-            case 3:
-                isSideSelected = true;
-                break;
         }
 
         subcategories = await dishModel.getListSubcategory(dish.category)
+        for (let i = 0; i < subcategories.length; i++) {
+            if (subcategories[i].subcategory_id === dish.subcategory) {
+                subcategories[i].selected = "selected";
+
+                break;
+            }
+        }
     }
 
     let dataContext = {
         dish: dish,
+        categories: categories,
         subcategories: subcategories,
         isPizzaSelected : isPizzaSelected,
-        isDrinkSelected : isDrinkSelected,
-        isSideSelected : isSideSelected,
     }
 
     res.render('.././components/dishes/views/update', dataContext);
@@ -430,27 +445,38 @@ exports.updateInfo = async (req, res, next) => {
 }
 
 exports.add = async (req, res, next) => {
-    let categoryId = req.query.category
-
-    if (categoryId === undefined || categoryId === "")
-        categoryId = '1';
+    let categoryName = req.query.category
+    let categoryId = 1;
 
     let isPizzaSelected = false;
     let isDrinkSelected = false;
     let isSideSelected = false;
 
    /* console.log(categoryId)*/
+    let categories = await  categoryModel.getAllCategory()
+
+    if (categoryName === undefined || categoryName === "")
+        categoryId = categories[0].category_id;
+
+    for (let i = 0; i < categories.length; i++) {
+        if (categories[i].name === categoryName) {
+            categoryId = categories[i].category_id;
+            categories[i].selected = "selected";
+
+            break;
+        }
+    }
 
     switch (categoryId) {
-        case '1':
+        case 1:
             isPizzaSelected = true;
             break;
 
-        case '2':
+        case 2:
             isDrinkSelected = true;
             break;
 
-        case '3':
+        case 3:
             isSideSelected = true;
             break;
     }
@@ -467,6 +493,7 @@ exports.add = async (req, res, next) => {
         isPizzaSelected: isPizzaSelected,
         isDrinkSelected: isDrinkSelected,
         isSideSelected: isSideSelected,
+        categories: categories,
         hasSubcategory: hasSubcategory,
         subcategories: subcategories,
         isLogin: true
@@ -485,7 +512,7 @@ exports.addInfo = async (req, res, next) => {
         if (err) {
             return
         }
-        console.log(fields)
+
         let dish = await dishModel.modify(fields)
         dish.images = []
 

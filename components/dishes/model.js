@@ -1,4 +1,5 @@
 const {db} = require('../../dal/db')
+const categoryModel = require('../categories/model')
 
 function execQuery(queryString) {
     return new Promise(data => {
@@ -25,22 +26,16 @@ exports.modify = async (fields) => {
     let name = fields.name
 
     let category = 0;
-    switch(fields.category) {
-        case 'Pizza' :
-            category = 1;
+    let categories = await categoryModel.getAllCategory()
+    for (let i = 0; i < categories.length; i++) {
+        if (categories[i].name === fields.category) {
+            category = categories[i].category_id;
             break;
-        case 'Thức uống':
-            category = 2;
-            break;
-        case 'Đồ ăn kèm':
-            category = 3;
-            break;
+        }
     }
 
     let subcategories = await this.getListSubcategory(category);
-
     let subcategory = 0
-
     for (let i = 0; i < subcategories.length; i++) {
         if (subcategories[i].name === fields.subcategory) {
             subcategory = subcategories[i].subcategory_id;
@@ -145,8 +140,8 @@ exports.getCategoryName = async (categoryId) => {
     return category[0].name
 }
 
-exports.getSubCategoryName = async (subCategoryId) => {
-    const subCategory = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' +subCategoryId)
+exports.getSubCategoryName = async (categoryId, subCategoryId) => {
+    const subCategory = await execQuery('SELECT * FROM dishes_subcategory WHERE subcategory_id = ' +subCategoryId + ' and category = ' + categoryId)
 
     return subCategory[0].name
 }
@@ -233,7 +228,7 @@ exports.getMaxId = async () => {
 
 exports.insert = async (dish) => {
     const dish_id = (await this.getMaxId()) + 1
-    await execQuery('INSERT INTO dishes(dish_id, name, category, subcategory, avatar, igredients, detail_description, price, discount, rate, total_reviews, status, is_active) VALUES ('+dish_id+',\''+dish.name+'\','+dish.category+','+dish.subcategory+',\''+dish.avatar+'\',\''+dish.igredients+'\',\''+dish.detail_description+'\','+dish.price+','+dish.discount+', 0, 0, 1, 1)')
+    await execQuery('INSERT INTO dishes(dish_id, name, category, subcategory, avatar, igredients, detail_description, price, discount, rate, total_reviews, status, is_active) VALUES ('+dish_id+',\''+dish.name+'\','+dish.category+','+dish.subcategory+',\''+dish.avatar+'\',\''+dish.igredients+'\',\''+dish.detail_description+'\','+dish.price+', 0, 0, 0, 1, 1)')
 
     for (let i = 0; i < dish.sizeNames.length; i++) {
         await execQuery('INSERT INTO dishes_sizes(size_id, dish, name, extra_price, is_active) VALUES ('+ (i + 1) + ', ' +dish_id+',\''+dish.sizeNames[i]+'\','+dish.sizePrice[i]+', 1)')
@@ -247,7 +242,7 @@ exports.insert = async (dish) => {
 }
 
 exports.update = async (dish) => {
-    await execQuery('UPDATE dishes SET name = \''+dish.name+'\', category = '+dish.category+', subcategory = '+dish.subcategory+', avatar = \''+dish.avatar+'\',igredients = \''+dish.igredients+'\', detail_description = \''+dish.detail_description+'\',price = '+dish.price+', discount = '+dish.discount+' where dish_id = '+dish.dish_id)
+    await execQuery('UPDATE dishes SET name = \''+dish.name+'\', category = '+dish.category+', subcategory = '+dish.subcategory+', avatar = \''+dish.avatar+'\',igredients = \''+dish.igredients+'\', detail_description = \''+dish.detail_description+'\',price = '+dish.price+' where dish_id = '+dish.dish_id)
 
     await execQuery('DELETE FROM dishes_sizes WHERE dish = '+dish.dish_id)
 
@@ -275,7 +270,7 @@ exports.getTopDish = async (limit) => {
     for (let i = 0; i < dishesId.length; i++) {
         let dish = await this.getDishById(dishesId[i].dish);
         dish.categoryName = await this.getCategoryName(dish.category)
-        dish.subcategoryName = await this.getSubCategoryName(dish.subcategory)
+        dish.subcategoryName = await this.getSubCategoryName(dish.category, dish.subcategory)
         dish.totalQuantity = dishesId[i].totalQuantity;
 
         result.push(dish)

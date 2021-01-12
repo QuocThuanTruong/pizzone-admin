@@ -32,15 +32,8 @@ function confirmDelete(urlDelete) {
     form.submit()
 }
 
-function gotoPage(categoryId, page) {
-    const categories = [1, 2, 3]
-    const category = categories[document.getElementById('category').selectedIndex]
-
-    if (categoryId === 0) {
-        categoryId = category
-    }
-
-    console.log(categoryId)
+function gotoPage(page) {
+    const category = $('#category').find(":selected").text();
 
     const totalDishPerPageArr = [1, 2, 3]
     const totalDishPerPage = totalDishPerPageArr[document.getElementById('total_dish_per_page').selectedIndex]
@@ -48,7 +41,7 @@ function gotoPage(categoryId, page) {
     const sortByArr = [1, 2, 3, 4]
     const sortBy = sortByArr[document.getElementById('sort-by').selectedIndex]
 
-    let url='/manage-dishes?category=' + categoryId + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
+    let url='/manage-dishes?category=' + category + '&page=' + page + '&total_dish_per_page=' + totalDishPerPage +'&sortBy=' + sortBy;
 
     let keyName = document.getElementById('key-name').value;
     if (keyName.length > 0) {
@@ -337,7 +330,7 @@ function gotoPageVoucher(page) {
 function changeCategory() {
     document.getElementById('key-name').value = '';
 
-    gotoPage(0, 1)
+    gotoPage( 1)
 }
 
 function changeCategoryAccount() {
@@ -353,14 +346,13 @@ function changeCategoryOrder() {
 }
 
 function changeCategoryAdd() {
-    const categories = [1, 2, 3]
-    const category = categories[document.getElementById('category').selectedIndex]
+    const category = $('#category').find(":selected").text();
 
     reloadPage(category)
 }
 
 function reloadPage(category) {
-    if (category === 0)
+    if (category === undefined)
         category = ""
 
     const url='/manage-dishes/add?category='+category;
@@ -414,7 +406,12 @@ function removeSize(item) {
     item.parentNode.removeChild(item);
 }
 
-function checkForm() {
+function checkForm(hasSubcategory) {
+    if (!hasSubcategory) {
+        alert('không thể thêm món ăn với category này vì chưa có subcategory')
+        return false;
+    }
+
     let sizeNamesInput = document.getElementsByName('size-name[]');
     let sizePricesInput = document.getElementsByName('size-price[]');
 
@@ -428,7 +425,7 @@ function checkForm() {
         sizePricesValue.push(sizePricesInput[i].value)
     }
 
-    if (sizePricesInput.length === 0) {
+    if (sizeNamesValue.length === 0) {
         alert('Không được bỏ trống phần kích thước')
         return false;
     }

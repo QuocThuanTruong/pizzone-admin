@@ -25,7 +25,7 @@
                             <h4 class="mt-0 header-title">Điền đầy đủ thông tin của món ăn cần thêm</h4>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data" id="new-dish-form" onsubmit="return(checkForm())">
+                            <form method="POST" action="/manage-dishes/add" enctype="multipart/form-data" id="new-dish-form" onsubmit="return(checkForm({{hasSubcategory}}))">
                                 <div class="form-group">
                                     <label>Tên</label>
                                     <input type="text" class="form-control" required placeholder="Tên sản phẩm" name="name" id="name"/>
@@ -35,21 +35,9 @@
                                     <label>Loại món ăn</label>
                                     <div >
                                         <select class="form-control" id="category" name="category" onchange="changeCategoryAdd()">
-                                            {{#if isPizzaSelected}}
-                                                <option selected>Pizza</option>
-                                            {{else}}
-                                                <option>Pizza</option>
-                                            {{/if}}
-                                            {{#if isDrinkSelected}}
-                                                <option selected>Thức uống</option>
-                                            {{else}}
-                                                <option>Thức uống</option>
-                                            {{/if}}
-                                            {{#if isSideSelected}}
-                                                <option selected>Đồ ăn kèm</option>
-                                            {{else}}
-                                                <option>Đồ ăn kèm</option>
-                                            {{/if}}
+                                            {{#each categories}}
+                                                <option {{selected}}>{{name}}</option>
+                                            {{/each}}
                                         </select>
                                     </div>
                                 </div>
@@ -106,13 +94,9 @@
                                                class="form-control" required
                                                placeholder="Giá tiền sản phẩm"
                                                name="price"
-                                               id="price"/>
+                                               id="price"
+                                               min="0"/>
                                     </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Giảm giá</label>
-                                    <input type="text" class="form-control" required placeholder="% giảm giá sản phẩm" name="discount" id="discount"/>
                                 </div>
 
                                 <!-- load kích thước từ db -->
@@ -126,7 +110,7 @@
                                                 <span class="input-group-text">VNĐ</span>
                                             </div>
 
-                                        <input type="number" class="form-control" placeholder="Giá tiền kèm theo"id="size-price"/>
+                                        <input type="number" class="form-control" placeholder="Giá tiền kèm theo"id="size-price" min="0"/>
                                         </div>
 
                                         <button type="button" class="btn btn-success waves-effect waves-light" onclick="addSize()">

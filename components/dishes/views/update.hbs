@@ -26,7 +26,7 @@
                             <h4 class="mt-0 header-title">Cập nhật thông tin của món ăn đã chọn</h4>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-dishes/update/{{dish.dish_id}}" enctype="multipart/form-data" id="new-dish-form" onsubmit="return(checkForm())">
+                            <form method="POST" action="/manage-dishes/update/{{dish.dish_id}}" enctype="multipart/form-data" id="new-dish-form" onsubmit="return(checkForm({{hasSubcategory}}))">
                                 <div class="form-group">
                                     <label>Tên</label>
                                     <input type="text" class="form-control" required placeholder="Tên sản phẩm" name="name" id="name" value="{{dish.name}}"/>
@@ -36,31 +36,19 @@
                                     <label>Loại món ăn</label>
                                     <div >
                                         <select class="form-control" id="category" name="category" onchange="changeCategoryUpdate({{dish.dish_id}})">
-                                            {{#if isPizzaSelected}}
-                                                <option selected>Pizza</option>
-                                            {{else}}
-                                                <option>Pizza</option>
-                                            {{/if}}
-                                            {{#if isDrinkSelected}}
-                                                <option selected>Thức uống</option>
-                                            {{else}}
-                                                <option>Thức uống</option>
-                                            {{/if}}
-                                            {{#if isSideSelected}}
-                                                <option selected>Đồ ăn kèm</option>
-                                            {{else}}
-                                                <option>Đồ ăn kèm</option>
-                                            {{/if}}
+                                            {{#each categories}}
+                                                <option {{selected}}>{{name}}</option>
+                                            {{/each}}
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Loại pizza</label>
-                                    <div onload="loadSubcategory({{dish.subcategory}})">
+                                    <div>
                                         <select class="form-control" id="subcategory" name="subcategory">
                                             {{#each subcategories}}
-                                                <option>{{name}}</option>
+                                                <option {{selected}}>{{name}}</option>
                                             {{/each}}
                                         </select>
                                         <script type="text/javascript">
@@ -108,14 +96,11 @@
                                                placeholder="Giá tiền sản phẩm"
                                                name="price"
                                                id="price"
-                                               value="{{dish.price}}"/>
+                                               value="{{dish.price}}"
+                                                min="0"/>
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Giảm giá</label>
-                                    <input type="text" class="form-control" required placeholder="% giảm giá sản phẩm" name="discount" id="discount" value="{{discount}}"/>
-                                </div>
 
                                 <!-- load kích thước từ db -->
                                     <div class="form-group">
@@ -127,7 +112,7 @@
                                                     <span class="input-group-text">VNĐ</span>
                                                 </div>
 
-                                                <input type="number" class="form-control" placeholder="Giá tiền kèm theo"id="size-price"/>
+                                                <input type="number" class="form-control" placeholder="Giá tiền kèm theo"id="size-price" min="0"/>
                                             </div>
 
                                             <button type="button" class="btn btn-success waves-effect waves-light" onclick="addSize()">
@@ -138,7 +123,7 @@
                                         <div class="m-t-20">
                                             <ul class="list-option-menu col-md-4" id="size-list">
                                                 {{#each dish.size}}
-                                                    <li>{{name}} (+{{standardPrice 1 extra_price}})<span class="close" onclick="removeSize(this.parentNode)">x</span></li>
+                                                    <li>{{name}} (+{{standardPrice 1 extra_price}})<input type="hidden" name="size-name[]" value="{{name}}"/><input type="hidden" name="size-price[]" value="{{extra_price}}"/><span class="close" onclick="removeSize(this.parentNode)">x</span></li>
                                                 {{/each}}
                                             </ul>
                                         </div>
@@ -174,19 +159,17 @@
 
 <script>
     function loadSubcategory(subcategory) {
-        console.log('ccccccccccc')
         document.getElementById("subcategory").selectedIndex = (subcategory - 1).toString();
     }
 
     function changeCategoryUpdate(id) {
-        const categories = [1, 2, 3]
-        const category = categories[document.getElementById('category').selectedIndex]
+        const category = $('#category').find(":selected").text();
 
         reloadPageUpdate(category, id)
     }
 
     function reloadPageUpdate(category, id) {
-        if (category === 0)
+        if (category === undefined)
             category = ""
 
         const url='/manage-dishes/update/'+id+'?category='+category;

@@ -30,7 +30,7 @@
                                         <div class="form-group mb-0">
                                             <input type="text" class="form-control rounded"
                                                    placeholder="Search your dishes.." name="key_name" id="key-name">
-                                            <button onclick="gotoPage(0, 1)"><i class="fa fa-search"></i></button>
+                                            <button onclick="gotoPage(1)"><i class="fa fa-search"></i></button>
                                         </div>
                                     </form>
                                 </div>
@@ -52,28 +52,16 @@
                                         <p class="found-search-item col-form-label">Categories</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="category" onchange="changeCategory()">
-                                                {{#if isPizzaSelected}}
-                                                    <option selected>Pizza</option>
-                                                {{else}}
-                                                    <option>Pizza</option>
-                                                {{/if}}
-                                                {{#if isDrinkSelected}}
-                                                    <option selected>Drink</option>
-                                                {{else}}
-                                                    <option>Drink</option>
-                                                {{/if}}
-                                                {{#if isSideSelected}}
-                                                    <option selected>Side</option>
-                                                {{else}}
-                                                    <option>Side</option>
-                                                {{/if}}
+                                                {{#each categories}}
+                                                    <option {{selected}}>{{name}}</option>
+                                                {{/each}}
                                             </select>
                                         </div>
 
                                         <p class="found-search-item col-form-label">Sort by</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="sort-by"
-                                                    onchange="gotoPage(0, 1)">
+                                                    onchange="gotoPage(1)">
                                                 <option>Date</option>
                                                 <option>Name</option>
                                                 <option>High price</option>
@@ -84,7 +72,7 @@
                                         <p class="found-search-item col-form-label">Shown items</p>
                                         <div class="col-sm-auto">
                                             <select class="form-control" id="total_dish_per_page"
-                                                    onchange="gotoPage(0, 1)">
+                                                    onchange="gotoPage(1)">
                                                 {{#if totalDishPerPageOption.option1}}
                                                     <option selected>1</option>
                                                 {{else}}
@@ -181,7 +169,6 @@
                                             </tr>
                                         \{{/each}}
 
-
                                     </script>
                                 </table>
 
@@ -193,10 +180,10 @@
             </div>
 
             <div id="pagination">
-                {{{render_pagination category page totalPage}}}
+                {{{render_pagination page totalPage}}}
             </div>
             <script type="text/x-handlebars-template" id="pagination-template">
-                \{{{render_pagination category page totalPage}}}
+                \{{{render_pagination page totalPage}}}
 
 
             </script>
