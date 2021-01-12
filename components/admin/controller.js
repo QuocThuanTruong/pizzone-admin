@@ -17,9 +17,9 @@ cloudinary.config({
 exports.index = async (req, res, next) => {
         let limit = 10;
 
-        let topDishes = dishModel.getTopDishes(limit)
+        let topDishes = await dishModel.getTopDish(limit)
 
-        res.render('.././components/admin/views/index');
+        res.render('.././components/admin/views/index', {topDishes});
 }
 
 exports.profile = async (req, res, next) => {

@@ -269,7 +269,19 @@ exports.getAllDish = async () => {
 }
 
 exports.getTopDish = async (limit) => {
+    let dishesId = await execQuery('select dish, sum(quantity) as totalQuantity from order_detail where is_active = 1 group by dish order by totalQuantity desc limit 10 offset 0');
 
+    let result = []
+    for (let i = 0; i < dishesId.length; i++) {
+        let dish = await this.getDishById(dishesId[i].dish);
+        dish.categoryName = await this.getCategoryName(dish.category)
+        dish.subcategoryName = await this.getSubCategoryName(dish.subcategory)
+        dish.totalQuantity = dishesId[i].totalQuantity;
+
+        result.push(dish)
+    }
+
+    return result
 }
 /*
 exports.test = async () => {
