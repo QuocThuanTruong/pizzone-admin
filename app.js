@@ -20,6 +20,7 @@ const categoriesRouter = require('./components/categories/router')
 const subcategoriesRouter = require('./components/subcategories/router')
 const hotDealsRouter = require('./components/hotdeals/router')
 const voucherRouter = require('./components/voucher/router')
+const shippingRouter = require('./components/shippingfees/router')
 
 var app = express();
 
@@ -55,6 +56,7 @@ app.use('/manage-categories/dishes-categories', categoriesRouter);
 app.use('/manage-categories/dishes-subcategories', subcategoriesRouter);
 app.use('/manage-hot-deals', hotDealsRouter);
 app.use('/manage-vouchers', voucherRouter);
+app.use('/manage-shipping-fees', shippingRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

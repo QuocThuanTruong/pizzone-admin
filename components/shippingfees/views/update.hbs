@@ -1,0 +1,104 @@
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Add shipping fee</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-right">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Admin</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Manage shipping fees</a></li>
+                            <li class="breadcrumb-item active">Add</li>
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
+            </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+
+                            <h4 class="mt-0 header-title">Điền đầy đủ thông tin của phí vận chuyển cần cập nhật</h4>
+                            <div class="locked-bagde-2 float-right m-r-20"><h5><span class="badge {{categoryActive is_active}}">{{voucherStatusActiveUpperCase}}</span></h5></div>
+
+                            <!-- Form -->
+                            <form method="POST" action="/manage-shipping-fees/add">
+                                <div class="form-group">
+
+                                    <label>Giới hạn dưới</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">VNĐ</span>
+                                        </div>
+                                        <input type="number" class="form-control" required placeholder="Số tiền tối thiểu" name="discount" id="name" min="0" max="10000"/>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Giới hạn trên</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">VNĐ</span>
+                                        </div>
+                                        <input type="number" class="form-control" required placeholder="Số tiền tối đa" name="discount" id="name" min="0" max="10000"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Phí vận chuyển</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">VNĐ</span>
+                                        </div>
+                                        <input type="number" class="form-control" required placeholder="Phí vận chuyển" name="discount" id="name" min="0" max="10000"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Trạng thái</label>
+                                    <div >
+                                        <select class="form-control" id="is_active" name="is_active">
+                                            {{#if isActive}}
+                                                <option selected value="1">Active</option>
+                                                <option value="0">Passive</option>
+                                            {{else}}
+                                                <option value="1">Active</option>
+                                                <option selected value="0">Passive</option>
+                                            {{/if}}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light">
+                                            Cập nhật
+                                        </button>
+
+                                        <a href="/manage-vouchers">
+                                            <button type="button" class="btn btn-secondary waves-effect m-l-5">
+                                                Bỏ qua
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- content -->
+
+    <footer class="footer">
+        © 2020 Pizzone <span class="d-none d-sm-inline-block"> - Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</span>.
+    </footer>
+</div>
