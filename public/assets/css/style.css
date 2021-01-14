@@ -3757,8 +3757,7 @@ table.focus-on tbody tr.focused td {
 
 .locked-bagde {
   position: absolute;
-  top: 0 !important;
-  right: 0 !important;
+  bottom: 0 !important;
 }
 
 .m-r-20 {
