@@ -24,18 +24,17 @@
                         <div class="card-body">
 
                             <h4 class="mt-0 header-title">Điền đầy đủ thông tin của phí vận chuyển cần cập nhật</h4>
-                            <div class="locked-bagde-2 float-right m-r-20"><h5><span class="badge {{categoryActive is_active}}">{{voucherStatusActiveUpperCase}}</span></h5></div>
+                            <div class="locked-bagde-2 float-right m-r-20"><h5><span class="badge {{categoryActive is_active}}">{{shippingstatusActiveUpperCase}}</span></h5></div>
 
                             <!-- Form -->
-                            <form method="POST" action="/manage-shipping-fees/add">
+                            <form method="POST" action="/manage-shipping-fees/update/{{id}}">
                                 <div class="form-group">
-
                                     <label>Giới hạn dưới</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
-                                        <input type="number" class="form-control" required placeholder="Số tiền tối thiểu" name="discount" id="name" min="0" max="10000"/>
+                                        <input type="number" class="form-control" required placeholder="Số tiền tối thiểu" name="min-price" id="name" min="0" max="10000000" value="{{min_price}}"/>
                                     </div>
 
                                 </div>
@@ -46,7 +45,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
-                                        <input type="number" class="form-control" required placeholder="Số tiền tối đa" name="discount" id="name" min="0" max="10000"/>
+                                        <input type="number" class="form-control" required placeholder="Số tiền tối đa" name="max-price" id="name" min="0" max="10000000" value="{{max_price}}"/>
                                     </div>
                                 </div>
 
@@ -56,7 +55,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
-                                        <input type="number" class="form-control" required placeholder="Phí vận chuyển" name="discount" id="name" min="0" max="10000"/>
+                                        <input type="number" class="form-control" required placeholder="Phí vận chuyển" name="fee" id="name" min="0" max="10000000" value="{{fee}}"/>
                                     </div>
                                 </div>
 
@@ -81,7 +80,7 @@
                                             Cập nhật
                                         </button>
 
-                                        <a href="/manage-vouchers">
+                                        <a href="/manage-shipping-fees">
                                             <button type="button" class="btn btn-secondary waves-effect m-l-5">
                                                 Bỏ qua
                                             </button>
