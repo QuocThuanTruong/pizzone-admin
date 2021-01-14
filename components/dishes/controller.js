@@ -298,6 +298,7 @@ exports.update = async (req, res, next) => {
         categories: categories,
         subcategories: subcategories,
         isPizzaSelected : isPizzaSelected,
+        hasSubcategory: true
     }
 
     res.render('.././components/dishes/views/update', dataContext);
