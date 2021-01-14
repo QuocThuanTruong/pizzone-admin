@@ -1,5 +1,16 @@
 <!-- modal -->
-<div id="alertInvalidAuth" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--<div id="alertInvalidAuth" class="">
+    <div class="dialog">
+        <div>
+            <p class="msg">Tài khoản hoặc mật khẩu không chính xác</p>
+            <nav>
+                <button class="ok" tabindex="1" onclick="closeLoginAlert()">Ok</button>
+            </nav>
+        </div>
+    </div>
+</div>-->
+
+<div id="alertInvalidAuth" class="modal fade show" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,8 +21,7 @@
                 <p></p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary waves-effect" data-dismiss="modal">OK</button>
-
+                <button class="btn btn-secondary waves-effect" data-dismiss="modal" onclick="closeLoginAlert()">OK</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

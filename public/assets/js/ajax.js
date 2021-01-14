@@ -421,7 +421,10 @@ function checkUser() {
 
             if (!data) {
                 result = false;
-                alert('username or password is incorrect')
+
+                $('#alertInvalidAuth').css('display', 'flex');
+            } else {
+                $('#login-form').submit();
             }
         },
         error: function (err) {
@@ -429,9 +432,11 @@ function checkUser() {
         }
     })
 
-    console.log('reuslt' + result)
-
     return result;
+}
+
+function closeLoginAlert() {
+    $('#alertInvalidAuth').css('display', 'none');
 }
 
 function addSize() {
@@ -449,8 +454,9 @@ function removeSize(item) {
 }
 
 function checkForm(hasSubcategory) {
+    let result = true;
     if (!hasSubcategory) {
-        alert('không thể thêm món ăn với category này vì chưa có subcategory')
+        $('#alertMissingSubcate').css('display', 'flex');
         return false;
     }
 
@@ -468,14 +474,22 @@ function checkForm(hasSubcategory) {
     }
 
     if (sizeNamesValue.length === 0) {
-        alert('Không được bỏ trống phần kích thước')
+        $('#alertMissingSize').css('display', 'flex');
         return false;
     }
 
     $('#new-dish-form').append('<input type="hidden" name="sizeNames" value="'+sizeNamesValue+'"/>')
     $('#new-dish-form').append('<input type="hidden" name="sizePrices" value="'+sizePricesValue+'"/>')
 
-    return true;
+    $('#new-dish-form').submit()
+}
+
+function closeMissingSizeAlert() {
+    $('#alertMissingSize').css('display', 'none');
+}
+
+function closeMissingSubcategoryAlert() {
+    $('#alertMissingSubcate').css('display', 'none');
 }
 
 function standardPrice(price) {
