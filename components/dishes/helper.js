@@ -372,7 +372,7 @@ function helper(hbs) {
 
     hbs.registerHelper('linkAvatar', function(avatar) {
         if (!avatar) {
-            avatar = '/assets/images/user_avatar.jpg'
+            avatar = '/assets/images/user_avatar.png'
         }
 
         return avatar

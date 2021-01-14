@@ -28,13 +28,13 @@
                                     <label>Ảnh đại diện</label>
                                     <div>
                                         {{#if account.active}}
-                                            <div class="locked-bagde"><h5><span class="badge badge-success">ĐANG HOẠT ĐỘNG</span>
+                                            <div class="locked-bagde"><h5><span class="badge badge-success">ACTIVE</span>
                                             </h5></div>
                                         {{else}}
                                             <div class="locked-bagde"><h5><span
-                                                    class="badge badge-danger">BỊ KHÓA</span></h5></div>
+                                                    class="badge badge-danger">LOCKED</span></h5></div>
                                         {{/if}}
-                                        <img style="width: 200px; height: 200px;" src="{{linkAvatar avatar}}"
+                                        <img style="height: 200px; background-size: cover !important;" src="{{linkAvatar account.avatar}}"
                                              data-holder-rendered="true">
                                     </div>
                                 </div>
