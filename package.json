@@ -23,6 +23,6 @@
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
-    "express-session": "^1.17.1"
+    "express-session": "1.14.2"
   }
 }
