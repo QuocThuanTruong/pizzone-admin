@@ -1,7 +1,9 @@
 const adminModel = require('./model')
+const orderModel = require('../orders/model')
 
 const dishModel = require('../dishes/model')
 const formidable = require('formidable');
+const morris = require('morris')
 const fs = require('fs')
 const path = require('path');
 const rimraf = require('rimraf')
@@ -19,7 +21,13 @@ exports.index = async (req, res, next) => {
 
         let topDishes = await dishModel.getTopDish(limit)
 
-        res.render('.././components/admin/views/index', {topDishes});
+        let totalDishes = await  orderModel.getAllDishes();
+        let totalOrders = await orderModel.getAllOrder()
+        let todayRevenue = await  orderModel.getAllRevenueToday()
+        let totalRevenue = await orderModel.getAllRevenue()
+
+
+        res.render('.././components/admin/views/index', {topDishes, totalDishes, totalOrders, todayRevenue, totalRevenue});
 }
 
 exports.profile = async (req, res, next) => {

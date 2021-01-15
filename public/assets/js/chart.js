@@ -1,14 +1,13 @@
+
 new Morris.Line({
     // ID of the element in which to draw the chart.
     element: 'yearRevenueChart',
     // Chart data records -- each entry in this array corresponds to a point on
     // the chart.
     data: [
-        { year: '2008', value: 20 },
-        { year: '2009', value: 10 },
-        { year: '2010', value: 5 },
-        { year: '2011', value: 5 },
-        { year: '2012', value: 20 }
+        { year: '2019', value: 100 },
+        { year: '2020', value: 500 },
+        { year: '2021', value: 300 }
     ],
     // The name of the data record attribute that contains x-values.
     xkey: 'year',
@@ -22,7 +21,7 @@ new Morris.Line({
 Morris.Bar({
     element: 'monthRevenueChart',
     data: [
-        { y: '1', a: 100 },
+        { y: '1', a: 10 },
         { y: '2', a: 75 },
         { y: '3', a: 50 },
         { y: '4', a: 75 },
