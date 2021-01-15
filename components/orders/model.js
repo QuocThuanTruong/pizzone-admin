@@ -198,7 +198,11 @@ exports.getAllRevenue = async () => {
 
     let result = await execQuery(query)
 
-    return result[0].total
+    if (result[0].total) {
+        return result[0].total
+    } else {
+        return 0;
+    }
 }
 
 exports.getAllDishes = async () => {
@@ -206,7 +210,11 @@ exports.getAllDishes = async () => {
 
     let result = await execQuery(query)
 
-    return result[0].total
+    if (result[0].total) {
+        return result[0].total
+    } else {
+        return 0;
+    }
 }
 
 exports.getAllOrder = async () => {
@@ -214,7 +222,11 @@ exports.getAllOrder = async () => {
 
     let result = await execQuery(query)
 
-    return result[0].total
+    if (result[0].total) {
+        return result[0].total
+    } else {
+        return 0;
+    }
 }
 
 exports.getAllRevenueToday = async () => {
@@ -234,7 +246,11 @@ exports.getRevenueByYear = async (year) => {
 
     let result = await execQuery(query)
 
-    return result[0].total
+    if (result[0].total) {
+        return result[0].total
+    } else {
+        return 0;
+    }
 }
 
 exports.getRevenueByMonth = async (month, year) => {
@@ -248,4 +264,28 @@ exports.getRevenueByMonth = async (month, year) => {
         return 0;
     }
 
+}
+
+exports.getAllYear = async () => {
+    let query = 'SELECT DISTINCT YEAR(created_date) as total FROM orders  ORDER BY total DESC LIMIT 3';
+
+    let result = await execQuery(query)
+
+    if (result) {
+        return result
+    } else {
+        return 2020;
+    }
+}
+
+exports.getCurrentYear = async () => {
+    let query = 'SELECT  YEAR(CURDATE()) as total';
+
+    let result = await execQuery(query)
+
+    if (result[0].total) {
+        return result[0].total
+    } else {
+        return 0;
+    }
 }
