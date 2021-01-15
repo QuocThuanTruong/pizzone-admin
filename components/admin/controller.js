@@ -20,7 +20,6 @@ exports.index = async (req, res, next) => {
         let limit = 10;
 
         let topDishes = await dishModel.getTopDish(limit)
-
         let totalDishes = await  orderModel.getAllDishes();
         let totalOrders = await orderModel.getAllOrder()
         let todayRevenue = await  orderModel.getAllRevenueToday()
